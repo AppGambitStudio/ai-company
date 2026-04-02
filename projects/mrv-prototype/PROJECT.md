@@ -6,7 +6,8 @@ Next Generation MRV (Monitoring, Reporting, and Verification) Prototype for the 
 
 **Client:** World Bank — Department for Climate Change
 **Type:** Prototype / MVP
-**Code Repo:** `appgambit/worldbank-poc`
+**Code Repo (local):** `/Users/dhaval/Documents/work/antigravity/mrv-prototype`
+**Code Repo (GitHub):** `appgambit/worldbank-poc` (remote to be added later)
 
 ---
 
@@ -166,10 +167,11 @@ Detailed task breakdowns with acceptance criteria in PHASES.pdf.
 
 ---
 
-## Blockers (pre-activation)
+## Blockers
 
-- [ ] Code repo `appgambit/worldbank-poc` created on GitHub (CEO action)
-- [ ] AWS credentials shared for SST deployments (CEO action)
+- [x] Code repo path confirmed: `/Users/dhaval/Documents/work/antigravity/mrv-prototype`
+- [ ] GitHub remote to be added later (`appgambit/worldbank-poc`)
+- [ ] AWS credentials shared for SST deployments (CEO action — needed from Task 2 onward)
 
 ---
 
@@ -183,6 +185,6 @@ All in `projects/mrv-prototype/docs/`:
 
 ---
 
-*Status: DISCOVERY (pending repo + credentials to activate)*
+*Status: ACTIVE*
 *Created: 2026-04-02*
 *First DEMO: 2026-04-16*
