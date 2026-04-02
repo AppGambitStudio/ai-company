@@ -1,10 +1,10 @@
 # Company Registry
 
-Last updated: (not yet started)
+Last updated: 2026-04-02T12:15:00Z
 
 ## Rotation
 Next check index: 0
-Last checked: (none)
+Last checked: mrv-prototype at 2026-04-02T12:15:00Z
 
 ## Workers
 
@@ -16,7 +16,7 @@ Last checked: (none)
 | 3 | — | AVAILABLE | — | — |
 
 ## Project Priority (ordered)
-(no projects yet)
+1. mrv-prototype — HIGH (World Bank client project)
 
 ## Queue (unassigned)
 (empty)
