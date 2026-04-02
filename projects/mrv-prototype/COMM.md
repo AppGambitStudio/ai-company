@@ -1,7 +1,7 @@
 # COMM — mrv-prototype
 
 ## Status
-WAITING_FOR_WORKER
+IN_PROGRESS
 
 ## Timestamps
 - Created: 2026-04-02T12:15:00Z
@@ -96,7 +96,7 @@ Write real unit tests — this is critical business logic. Use Vitest.
 No AWS needed — pure TypeScript logic + tests.
 
 ## Worker Notes
-(none yet)
+- 2026-04-02: Started work on Task 4a. Read ARCHITECTURE.pdf sections 7, 10, 11 for RBAC, state machine, and API error format.
 
 ## Revision History
 (none)
