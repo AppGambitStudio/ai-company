@@ -86,6 +86,22 @@ tmux attach -t coordinator
 - **Reattach:** `tmux attach -t coordinator`
 - **If Coordinator crashes:** Restart with Step 3. It reads REGISTRY.md to rebuild state.
 
+### 7. Slash Commands
+
+Use these in the Coordinator session for quick operations:
+
+| Command | What it does |
+|---------|-------------|
+| `/status` | Overall system summary |
+| `/employees` | Worker assignment table |
+| `/inbox` | CEO inbox with pending actions |
+| `/projects` | All projects with status |
+| `/project-status {name}` | Specific project's current task and COMM.md |
+| `/milestones {name}` | Milestone progress for a project |
+| `/review-log {name}` | Review history for a project |
+| `/daily-log` | Latest daily summary |
+| `/check-cycle` | Force one round-robin check now (don't wait for timer) |
+
 ---
 
 ## How It Works
