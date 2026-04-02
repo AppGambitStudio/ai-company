@@ -1,0 +1,1 @@
+Read CEO_INBOX.md and show the most recent entries. Highlight any items marked "Action needed" that haven't been resolved yet.

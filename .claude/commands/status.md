@@ -1,0 +1,1 @@
+Read coordinator/REGISTRY.md and give a concise status summary: active projects, worker assignments, current tasks, and what's next in rotation. Include any blocked or escalated items.

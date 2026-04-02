@@ -1,0 +1,1 @@
+Read the COMM.md for the project specified by the user (e.g., /project-status mrv-prototype). Show: current task, status, assigned worker, session ID, last update timestamp, and worker notes. If no project name given, ask which project.

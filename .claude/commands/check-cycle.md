@@ -1,0 +1,1 @@
+Run one coordinator check cycle NOW (don't wait for /loop timer). Do: git pull, read REGISTRY.md for next project in rotation, read its COMM.md, process any state changes, update REGISTRY.md, git commit and push. Report what you found and what actions you took.

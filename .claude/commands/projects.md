@@ -1,0 +1,1 @@
+Read coordinator/REGISTRY.md and list all projects with their current status (DISCOVERY, ACTIVE, PAUSED, COMPLETED). For each ACTIVE project, also read its COMM.md and show the current task status. Include the priority list and any queued projects.

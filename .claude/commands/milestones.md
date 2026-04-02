@@ -1,0 +1,1 @@
+Read the MILESTONES.md for the project specified by the user (e.g., /milestones mrv-prototype). Show current and upcoming milestones with task status. If no project name given, ask which project.

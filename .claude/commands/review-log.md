@@ -1,0 +1,1 @@
+Read the REVIEW_LOG.md for the project specified by the user (e.g., /review-log mrv-prototype). Show the most recent reviews with verdicts and feedback. If no project name given, ask which project.

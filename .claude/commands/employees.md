@@ -1,0 +1,1 @@
+Read coordinator/REGISTRY.md and show the current worker status table. For each worker, show: slot, project, status, current task, and session ID. Flag any workers that are AVAILABLE or RATE_LIMITED.

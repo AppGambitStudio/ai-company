@@ -1,0 +1,1 @@
+Read coordinator/DAILY_LOG.md and show the most recent daily summary. Include tasks completed, issues, rate limits, and tomorrow's plan.
