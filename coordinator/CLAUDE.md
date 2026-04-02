@@ -827,7 +827,7 @@ When a `<channel source="...">` event arrives:
 ### 17.2 What You Must Always Do
 
 - Always commit and push after every state change
-- Always update REGISTRY.md after every action
+- **Always update REGISTRY.md in the SAME commit as any COMM.md or REVIEW_LOG.md change.** These files must never be out of sync. If you approve a task in REVIEW_LOG.md, REGISTRY.md must reflect that in the same commit. If you write a new task to COMM.md, REGISTRY.md must show the new task and status in the same commit.
 - Always include timestamps in ISO 8601 format
 - Always write to CEO_INBOX.md before sending channel notifications
 - Always run tests before approving code
