@@ -51,12 +51,16 @@ ai-company/                          <- Private Git repo
     │   ├── COMM.md                    Task protocol (Coordinator <-> Worker)
     │   ├── MILESTONES.md              Task breakdown (active milestones only)
     │   ├── MILESTONES_ARCHIVE.md      Completed milestones log
-    │   └── REVIEW_LOG.md              Review history
+    │   ├── REVIEW_LOG.md              Review history
+    │   ├── MEMORY.md                  Internal context (decisions, feedback, preferences)
+    │   └── docs/                      Reference materials (SOW, requirements, wireframes)
     └── docproof/
         ├── PROJECT.md
         ├── BRIEF.md
         ├── COMM.md
         ├── MILESTONES.md
         ├── MILESTONES_ARCHIVE.md
-        └── REVIEW_LOG.md
+        ├── REVIEW_LOG.md
+        ├── MEMORY.md
+        └── docs/
 ```

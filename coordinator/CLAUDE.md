@@ -357,7 +357,9 @@ Before launching a worker on a project, prepare its working context in the **cod
 - Use subagents for parallel sub-tasks when beneficial
 ```
 
-### 7.2 Write/Update MEMORY.md in Code Repo
+### 7.2 Write/Update MEMORY.md in Management Repo
+
+MEMORY.md lives in the management repo at `projects/{name}/MEMORY.md` (NOT in the code repo — it contains internal AI Company context, not project code).
 
 ```markdown
 # {Project Name} -- Context Memory
@@ -681,12 +683,21 @@ CEO will restart you. On restart:
 3. Read CEO_INBOX.md for any pending CEO responses
 4. Resume the round-robin loop from the last rotation index in REGISTRY.md
 
-### 12.4 Rate Limited (Your Own)
+### 12.4 Rate Limit Awareness
 
-1. Log the rate limit event in DAILY_LOG.md with timestamp
-2. Note expected resume time
-3. The /loop timer will resume automatically after cooldown
-4. On resume, continue from where you left off in the rotation
+**Proactive throttling — do not wait until you hit the wall:**
+- If you sense you're consuming tokens heavily (long reviews, multiple worker launches, large file reads), slow down voluntarily
+- After each loop iteration, pause briefly before the next action
+- Do NOT launch multiple workers back-to-back — space them out
+- If a worker launch or review fails due to rate limits, immediately:
+  1. Log the rate limit event in DAILY_LOG.md with timestamp
+  2. Set any pending worker tasks to PAUSED with note "rate limited"
+  3. Increase loop interval if possible (tell CEO via channel)
+  4. Wait for cooldown before resuming any work
+
+**80% rule:** If you notice rate limit warnings or slowdowns, assume you're at ~80% capacity. Stop launching new workers and let existing work complete before taking on more. Resume normal operations only after a full cooldown period.
+
+**Shared account awareness:** When Coordinator and workers share the same account, every worker `claude -p` call draws from the same quota. Factor this in when deciding whether to launch additional workers.
 
 ### 12.5 Repeated Worker Failures
 
