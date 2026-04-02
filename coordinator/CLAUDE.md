@@ -65,20 +65,9 @@ On startup, complete ALL steps before engaging in conversation with the CEO:
 5. **Self-check: verify runtime files exist.** If `CEO_INBOX.md`, `coordinator/REGISTRY.md`, or `coordinator/DAILY_LOG.md` don't exist, create them with empty templates.
 6. Read `coordinator/REGISTRY.md` to rebuild state awareness
 7. Read `CEO_INBOX.md` to check for any pending CEO responses
-8. **IMMEDIATELY start the round-robin loop** (do this BEFORE responding to CEO):
+8. Respond to the CEO with a startup confirmation: "Coordinator online. [summary of current state from REGISTRY.md]."
 
-```
-/loop 5m coordinator-check-cycle
-```
-
-9. THEN respond to the CEO with a startup confirmation: "Coordinator online. Loop started. [summary of current state from REGISTRY.md]."
-
-**IMPORTANT — Loop Resilience:**
-The `/loop` is session-scoped. It dies on session resume, restart, or context compaction. You MUST:
-- Check if the loop is still active whenever you interact with the CEO (list scheduled tasks silently)
-- If the loop is gone, restart it immediately before doing anything else
-- After context compaction, the SessionStart hook re-injects CLAUDE.md — re-start the loop at that point
-- If in doubt, run `/check-loop` to verify and restart
+**NOTE — The round-robin loop is handled by an external script (`scripts/coordinator-loop.sh`) that sends `/check-cycle` to this session at regular intervals. You do NOT need to start `/loop` yourself. The external script is reliable and survives session resume/compaction. Just respond to `/check-cycle` when it arrives.**
 
 ### 3.2 Each Iteration (coordinator-check-cycle)
 

@@ -40,7 +40,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'CRITICAL: Session was resumed. The /loop is dead. You MUST immediately run: /loop 15m coordinator-check-cycle — do this BEFORE anything else.'"
+            "command": "echo 'Session resumed. Read coordinator/CLAUDE.md and coordinator/REGISTRY.md to rebuild state. The external loop script will send /check-cycle automatically — no need to start /loop.'"
           }
         ]
       },
@@ -49,7 +49,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "echo 'CRITICAL: Context was compacted. The /loop is dead. You MUST immediately run: /loop 15m coordinator-check-cycle — do this BEFORE anything else.' && cat coordinator/CLAUDE.md"
+            "command": "echo 'Context compacted. Re-read coordinator/CLAUDE.md for your operating manual.' && cat coordinator/CLAUDE.md"
           }
         ]
       }
