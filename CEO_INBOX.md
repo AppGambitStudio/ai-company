@@ -6,6 +6,22 @@ Communication from APPGAMBIT AI (Coordinator) to CEO. Append-only.
 
 ## 2026-04-02
 
+### Status Update: mrv-prototype / Discovery Complete, Milestone 1 Planned
+- All 7 open questions resolved by CEO
+- Key decisions: us-east-1, Phase 0 skipped, 2-week sprints, **First DEMO target: 2026-04-16**
+- Milestone 1 (Foundation & Infrastructure) broken into 5 tasks:
+  1. Monorepo scaffolding & tooling
+  2. SST infrastructure (VPC, DB, Auth, Storage, API Gateway)
+  3. Database schema & seed data (Drizzle ORM, 11 tables)
+  4. API foundation & auth (middleware, RBAC, `GET /auth/me`)
+  5. Frontend foundation & auth pages (Next.js, Catalyst, login flow)
+- **Blocked on 2 CEO actions:**
+  - [ ] Create `appgambit/worldbank-poc` repo on GitHub
+  - [ ] Share AWS credentials for SST deployments
+- **Action needed:** Create repo + share creds. Worker launches immediately after.
+
+---
+
 ### Status Update: mrv-prototype / Project Drafted
 - Reviewed all 4 reference documents (ARCHITECTURE.pdf, DBSCHEMA.pdf, PHASES.pdf, architecture diagram)
 - Exceptionally well-specified: 20-page architecture doc, 10-page DB schema, 16-page phased implementation plan

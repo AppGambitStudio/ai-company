@@ -144,32 +144,32 @@ Detailed task breakdowns with acceptance criteria in PHASES.pdf.
 
 ---
 
-## Assumptions
+## Key Decisions
 
-1. Catalyst (Tailwind UI premium kit) license is available for the project
-2. AWS account with appropriate permissions will be provided
-3. Custom domain and Route 53 hosted zone will be configured
-4. SES will be moved out of sandbox for production email sending
-5. Client will provide World Bank logo asset for PDF cover page
-6. "Sprint" duration not yet defined -- assuming 2-week sprints (total ~29 weeks / ~7 months)
+1. **Region:** us-east-1 (confirmed by CEO 2026-04-02)
+2. **Code repo:** `appgambit/worldbank-poc` — CEO creating shortly
+3. **AWS credentials:** CEO will share separately
+4. **Catalyst license:** Confirmed available
+5. **Phase 0:** Skipped — design & spikes already finalized via architecture docs
+6. **Sprint duration:** 2 weeks (confirmed)
+7. **First DEMO target:** 2026-04-16 (2 weeks from project start)
+8. **No hard deadline** from World Bank yet
 
 ---
 
-## Open Questions
+## Assumptions
 
-1. **Region discrepancy:** Architecture doc specifies `us-east-1`. CEO default region is `ap-south-1` (Mumbai). Which region should we use? World Bank may have data residency preferences.
+1. AWS account with appropriate permissions will be provided before worker launch
+2. Custom domain and Route 53 hosted zone will be configured for staging/prod
+3. SES will be moved out of sandbox for production email sending
+4. Client will provide World Bank logo asset for PDF cover page
 
-2. **Code repo:** Does `appgambit/worldbank-poc` already exist on GitHub, or should we create it?
+---
 
-3. **AWS account:** Which AWS account/profile should workers use for `sst dev` and deployments? Are credentials configured?
+## Blockers (pre-activation)
 
-4. **Catalyst license:** Do we have access to the Tailwind UI / Catalyst premium component kit?
-
-5. **Phase 0 scope:** The wireframes/Figma deliverable in Phase 0 requires design tooling. Should we skip Phase 0 (spikes + wireframes) and go straight to Phase 1 (code), treating the architecture docs as the approved design? Or do you want wireframes produced first?
-
-6. **Sprint duration:** Assuming 2-week sprints. Confirm?
-
-7. **Target delivery date:** Is there a deadline from the World Bank?
+- [ ] Code repo `appgambit/worldbank-poc` created on GitHub (CEO action)
+- [ ] AWS credentials shared for SST deployments (CEO action)
 
 ---
 
@@ -183,5 +183,6 @@ All in `projects/mrv-prototype/docs/`:
 
 ---
 
-*Status: DISCOVERY*
+*Status: DISCOVERY (pending repo + credentials to activate)*
 *Created: 2026-04-02*
+*First DEMO: 2026-04-16*
