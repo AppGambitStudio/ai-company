@@ -2,5 +2,19 @@
 *.log
 .env
 
-# superpowers
+# superpowers (internal design docs)
 docs/superpowers/
+
+# project-specific data (never push client work)
+projects/
+
+# runtime files (contain live project data)
+CEO_INBOX.md
+coordinator/REGISTRY.md
+coordinator/DAILY_LOG.md
+
+# OS files
+.DS_Store
+
+# temp files
+/tmp/

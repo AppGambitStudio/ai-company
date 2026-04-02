@@ -31,52 +31,13 @@ git pull
 
 ## Step 2: Initialize Runtime Files
 
-The spec files, CLAUDE.md operating manuals, and hook scripts are already in the repo. But the runtime files (CEO_INBOX.md, REGISTRY.md, DAILY_LOG.md) need to be created on first run.
+The spec files, CLAUDE.md operating manuals, and hook scripts are already in the repo. The runtime files (CEO_INBOX.md, REGISTRY.md, DAILY_LOG.md) are gitignored — copy them from the templates on first run.
 
 ```bash
-# Create CEO_INBOX.md
-cat > CEO_INBOX.md << 'EOF'
-# CEO Inbox
-
-Communication from APPGAMBIT AI (Coordinator) to CEO. Append-only.
-
----
-EOF
-
-# Create REGISTRY.md
-cat > coordinator/REGISTRY.md << 'EOF'
-# Company Registry
-
-Last updated: (not yet started)
-
-## Rotation
-Next check index: 0
-Last checked: (none)
-
-## Workers
-
-### Employee 1 (Account 1 — shared with Coordinator)
-| Slot | Project | Status | Current Task | Session ID |
-|------|---------|--------|-------------|------------|
-| 1 | — | AVAILABLE | — | — |
-| 2 | — | AVAILABLE | — | — |
-| 3 | — | AVAILABLE | — | — |
-
-## Project Priority (ordered)
-(no projects yet)
-
-## Queue (unassigned)
-(empty)
-EOF
-
-# Create DAILY_LOG.md
-cat > coordinator/DAILY_LOG.md << 'EOF'
-# APPGAMBIT AI — Daily Log
-
-Append-only daily summaries.
-
----
-EOF
+# Copy runtime files from templates
+cp CEO_INBOX.template.md CEO_INBOX.md
+cp coordinator/REGISTRY.template.md coordinator/REGISTRY.md
+cp coordinator/DAILY_LOG.template.md coordinator/DAILY_LOG.md
 
 # Create projects directory
 mkdir -p projects
