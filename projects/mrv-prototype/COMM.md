@@ -1,7 +1,7 @@
 # COMM — mrv-prototype
 
 ## Status
-IN_PROGRESS
+DONE_AWAITING_REVIEW
 
 ## Timestamps
 - Created: 2026-04-02T12:15:00Z
@@ -85,8 +85,22 @@ Branch from `feature/task-1-monorepo-scaffolding` (Task 1 approved, not yet merg
 No AWS credentials yet — use a placeholder DATABASE_URL in drizzle config. Drizzle Kit can generate migrations without a live DB.
 
 ## Worker Notes
-- Started work on Task 3: Database Schema & Seed Data
-- Working in feature/task-3-database-schema branch
+- Branched feature/task-3-database-schema from feature/task-1-monorepo-scaffolding
+- Added `@neondatabase/serverless` as pg driver dependency (placeholder for Aurora Serverless v2)
+- Created `drizzle.config.ts` with placeholder DATABASE_URL, postgresql dialect, schema pointing to `./src/schema/index.ts`
+- Defined 8 enums in `src/schema/enums.ts`: org_type, user_status, user_role, template_status, editor_type, report_status, comment_status, notification_type — all values match DBSCHEMA.pdf exactly
+- Defined all 11 tables in separate files under `src/schema/`:
+  - organizations, users, countries, report_templates, template_sections, reports, report_sections, report_revisions, comments, change_records, notifications, audit_log
+  - All columns, types, defaults, and nullability match DBSCHEMA.pdf
+  - All FK ON DELETE behaviors correct: CASCADE for child tables (template_sections, report_sections, report_revisions, comments, change_records, notifications, parent_comment_id), RESTRICT for referential integrity (users→organizations, reports→templates, etc.), SET NULL for countries.auditor_organization_id
+- Defined all 17 indexes per DBSCHEMA.pdf spec (idx_users_cognito_sub, idx_users_email, idx_users_organization_id, idx_countries_organization_id, idx_countries_auditor_organization_id, idx_templates_group_status_version, idx_templates_status, idx_template_sections_template_order, idx_reports_country_status, idx_reports_status, idx_reports_template_id, idx_report_sections_report_id, idx_revisions_report_number, idx_comments_report_section, idx_comments_report_status, idx_change_records_report_section, idx_notifications_user_unread, idx_audit_entity, idx_audit_user)
+- Created barrel export `src/schema/index.ts` re-exporting all tables and enums
+- Created seed script `src/seed.ts` with typed `NeonHttpDatabase` parameter: FMT org (org-fmt-001), admin user (usr-admin-001, cognito-sub-placeholder), Ethiopia + Colombia country orgs, Ethiopia (ETH) + Colombia (COL) countries, Global Audit Partners auditor org (org-aud-001)
+- Updated `src/index.ts` to export schema and seed function
+- Added `generate` script to package.json for drizzle-kit
+- Generated initial migration: `drizzle/0000_high_justice.sql` (12 tables, all enums, all indexes, all FKs)
+- All checks pass: `pnpm typecheck` ✓, `pnpm lint` ✓, `pnpm test` ✓ (no test files, exits 0)
+- Note: Used drizzle-orm v0.33 object-syntax for table extra config (indexes) since the array syntax is v0.34+
 
 ## Revision History
 (none)
