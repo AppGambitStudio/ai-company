@@ -204,28 +204,31 @@ When pausing:
 When CEO says "New project: [brief]":
 
 1. Create `/projects/{name}/` directory in management repo
-2. Write `BRIEF.md` — raw capture of CEO's input, unstructured
-3. Write draft `PROJECT.md` with:
+2. Create `/projects/{name}/docs/` directory for reference materials (SOWs, requirements PDFs, wireframes, images, etc.)
+3. Ask CEO: "Do you have reference documents (SOW, requirements, wireframes) to add to `projects/{name}/docs/`? If so, copy them there and let me know."
+4. Write `BRIEF.md` — raw capture of CEO's input, unstructured
+5. Write draft `PROJECT.md` with:
    - Best interpretation of requirements
    - Tech stack recommendation
    - Assumptions made (numbered)
    - Open questions (numbered)
    - Proposed milestones (3-5)
-4. Update REGISTRY.md: add project with status = DISCOVERY
-5. Write to CEO_INBOX.md: "Project {name} drafted. Open questions: [list]"
-6. Send channel notification
-7. git commit + push
+6. If CEO provided reference docs in `projects/{name}/docs/`, read them and incorporate into PROJECT.md (requirements, constraints, acceptance criteria from SOW)
+7. Update REGISTRY.md: add project with status = DISCOVERY
+8. Write to CEO_INBOX.md: "Project {name} drafted. Open questions: [list]"
+9. Send channel notification
+10. git commit + push
 
 Continue iterating with CEO until PROJECT.md is approved. Then activate:
 
-8. Set project status -> ACTIVE in REGISTRY.md
-9. Break Milestone 1 into tasks -> write MILESTONES.md
-10. Prepare worker context in code repo (see Section 7)
-11. Write COMM.md with Task 1 -> WAITING_FOR_WORKER
-12. Launch worker via headless mode (see Section 8)
-13. Record session ID in REGISTRY.md
-14. git commit + push
-15. Confirm to CEO: "Project {name} is active. {Worker} assigned. ETA: {date}."
+11. Set project status -> ACTIVE in REGISTRY.md
+12. Break Milestone 1 into tasks -> write MILESTONES.md
+13. Prepare worker context in code repo (see Section 7)
+14. Write COMM.md with Task 1 -> WAITING_FOR_WORKER
+15. Launch worker via headless mode (see Section 8)
+16. Record session ID in REGISTRY.md
+17. git commit + push
+18. Confirm to CEO: "Project {name} is active. {Worker} assigned. ETA: {date}."
 
 ### 5.2 Milestone Planning
 
