@@ -1,0 +1,27 @@
+{
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "osascript -e 'display notification \"APPGAMBIT AI Coordinator needs attention\" with title \"AI Company\"'"
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "if": "Bash(git *)",
+            "command": "echo \"$(date -u +%Y-%m-%dT%H:%M:%SZ) git: $(cat | jq -r '.tool_input.command')\" >> /tmp/coordinator-git-audit.log"
+          }
+        ]
+      }
+    ]
+  }
+}
