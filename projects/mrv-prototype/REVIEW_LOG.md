@@ -13,3 +13,10 @@
 - Notes: All 11 tables match DBSCHEMA.pdf. 8 enums with exact values. All FK ON DELETE behaviors correct (CASCADE/RESTRICT/SET NULL). 17+ indexes defined. Seed script covers FMT org, admin user, 2 country orgs, 2 countries, auditor org. Migration generated. Minor: uses @neondatabase/serverless driver — will swap to postgres driver when wiring SST/Aurora in Task 2.
 - Files reviewed: packages/db/src/schema/enums.ts, reports.ts, comments.ts, users.ts, countries.ts, organizations.ts, report-templates.ts, template-sections.ts, report-sections.ts, report-revisions.ts, change-records.ts, notifications.ts, audit-log.ts, index.ts, seed.ts, drizzle.config.ts, drizzle/0000_high_justice.sql
 - Test results: pnpm typecheck (pass), pnpm lint (pass), pnpm test (pass)
+
+## Task 4a: Core Business Logic & API Utilities
+- Reviewed: 2026-04-02T14:00:00Z
+- Verdict: APPROVED
+- Notes: 134 tests all passing. State machine matches ARCHITECTURE.pdf Section 10 exactly — all 10 valid transitions, all 6 guard conditions. RBAC helpers clean with ForbiddenError throws. Error classes match Section 11.1 envelope format. Pagination uses fetch-limit+1 pattern. 15 Zod schemas cover all API request bodies. Audit helper properly decoupled from db driver.
+- Files reviewed: packages/core/src/services/report-workflow.ts, auth/rbac.ts, auth/scope.ts, auth/types.ts, api/errors.ts, api/pagination.ts, api/validation.ts, audit/audit.ts, domain/schemas.ts, all test files
+- Test results: 134 tests, 5 files, all green (pnpm typecheck pass, pnpm lint pass, pnpm test pass)
