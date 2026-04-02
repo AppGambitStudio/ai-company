@@ -27,3 +27,10 @@
 - Notes: SST v4.6.10 installed. sst.config.ts correct (worldbank-mrv, us-east-1, stage-based removal). All 6 infra files: VPC (2 AZs, NAT), Aurora Serverless v2 (stage-based ACU), Cognito (3 groups noted), S3 (versioning, no public access), API Gateway (42 routes, JWT auth, correct memory/timeout per Section 13.2), Nextjs frontend. 9 Lambda handler placeholder files with typed 501 stubs. Custom sst-env.d.ts for type safety without sst dev. No AWS calls made. Minor notes: Cognito groups need Pulumi raw resources, CORS allowOrigins should be restricted for prod.
 - Files reviewed: sst.config.ts, sst-env.d.ts, infra/vpc.ts, database.ts, auth.ts, storage.ts, api.ts, web.ts, packages/functions/src/*.ts
 - Test results: pnpm typecheck (pass), pnpm lint (pass), pnpm test (134/134 pass)
+
+## Task 5: Frontend Foundation & Auth Pages
+- Reviewed: 2026-04-02T16:50:00Z
+- Verdict: APPROVED
+- Notes: 22 files changed (all in packages/web/ + lockfile). Headless UI v2 used as Catalyst fallback (correct decision — Catalyst requires paid license). amazon-cognito-identity-js chosen over full Amplify (lighter, correct). Auth context clean — useCallback/useMemo, session persistence via getCurrentSession, role from cognito:groups with priority (fmt > auditor > country). Sidebar layout responsive with mobile dialog transition. Role-based nav filtering correct for all 3 groups. API client handles 401 auto-retry, error envelope parsing per Section 11.1. React Query configured (staleTime 30s, retry 1). All 3 shared components (LoadingSkeleton, ErrorBoundary, EmptyState) well-typed with proper accessibility (sr-only, aria labels). Auth pages use proper Cognito SRP flow. No backend package changes.
+- Files reviewed: lib/cognito.ts, lib/api.ts, lib/query-client.ts, contexts/auth-context.tsx, components/providers.tsx, components/auth/protected-route.tsx, components/layout/sidebar-layout.tsx, components/shared/*.tsx, app/(auth)/**/page.tsx, app/(dashboard)/layout.tsx, app/unauthorized/page.tsx, app/layout.tsx, app/page.tsx, package.json
+- Test results: pnpm typecheck (pass), pnpm lint (pass), pnpm test (134/134 pass)
