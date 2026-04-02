@@ -35,6 +35,7 @@ The spec files, CLAUDE.md operating manuals, and hook scripts are already in the
 
 ```bash
 # Copy runtime files from templates
+cp CEO_CONFIG.template.md CEO_CONFIG.md        # <- customize this with your preferences
 cp CEO_INBOX.template.md CEO_INBOX.md
 cp coordinator/REGISTRY.template.md coordinator/REGISTRY.md
 cp coordinator/DAILY_LOG.template.md coordinator/DAILY_LOG.md
