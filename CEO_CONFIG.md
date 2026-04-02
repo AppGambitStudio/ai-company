@@ -115,7 +115,7 @@
 - **Blocked commands:** See `scripts/hooks/block-dangerous-commands.sh`
 - **Interactive commands:** See `scripts/hooks/block-interactive-commands.sh`
 - **Custom blocks:** Add patterns to the hook scripts as needed. No code changes required — just append to the BLOCKED_PATTERNS array.
-- **Permission mode — Coordinator:** `acceptEdits` (Pro plan) or `auto` (Team/Enterprise)
+- **Permission mode — Coordinator:** `bypassPermissions` (hooks provide guardrails) or `auto` (Team/Enterprise)
 - **Permission mode — Workers:** `bypassPermissions` (hooks provide guardrails)
 
 ---

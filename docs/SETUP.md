@@ -149,10 +149,10 @@ Inside tmux, start the Coordinator:
 
 ```bash
 cd /Users/dhaval/Documents/work/antigravity/ai-company
-claude --permission-mode acceptEdits
+claude --permission-mode bypassPermissions
 ```
 
-> **Note:** We use `acceptEdits` instead of `auto` because `auto` requires Team/Enterprise/API plan. On Pro plan, `acceptEdits` auto-approves file edits but prompts for bash commands. You can approve bash commands as they come up, or add specific allowlist rules.
+> **Note:** We use `bypassPermissions` so the Coordinator can run git commands, launch workers, and manage files without permission prompts. Hook scripts in `scripts/hooks/` provide deterministic guardrails (blocking dangerous/interactive commands) regardless of permission mode.
 
 Once the Coordinator session starts, it will read `coordinator/CLAUDE.md` automatically. Tell it:
 
@@ -254,7 +254,7 @@ With 2 projects on round-robin, each gets checked every 10 minutes. Workers run 
 tmux attach -t coordinator
 # Check if the session is alive. If not:
 cd /Users/dhaval/Documents/work/antigravity/ai-company
-claude --permission-mode acceptEdits
+claude --permission-mode bypassPermissions
 # Tell it to read CLAUDE.md and resume
 ```
 
@@ -291,7 +291,7 @@ echo $?
 
 | Action | Command |
 |--------|---------|
-| Start Coordinator | `tmux new -s coordinator` then `claude --permission-mode acceptEdits` |
+| Start Coordinator | `tmux new -s coordinator` then `claude --permission-mode bypassPermissions` |
 | Detach Coordinator | `Ctrl+B` then `D` |
 | Reattach | `tmux attach -t coordinator` |
 | Check CEO inbox | `cat CEO_INBOX.md` |

@@ -41,7 +41,7 @@ tmux new-session -s coordinator
 cd /path/to/ai-company
 
 # Launch Claude Code
-claude --permission-mode acceptEdits
+claude --permission-mode bypassPermissions
 ```
 
 Paste this as your first message to the Coordinator:
