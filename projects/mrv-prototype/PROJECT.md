@@ -28,8 +28,8 @@ Next Generation MRV (Monitoring, Reporting, and Verification) Prototype for the 
 | Runtime | Node.js | 20 LTS |
 | Frontend | Next.js (App Router) + React + TypeScript | Next.js 14+, React 18+ |
 | UI Framework | Tailwind CSS + Catalyst (Tailwind UI premium kit) | Tailwind 3.4+ |
-| Backend | AWS Lambda (Node.js) via SST v3 | SST Ion (v3) |
-| Infrastructure as Code | SST v3 (Pulumi) | Latest |
+| Backend | AWS Lambda (Node.js) via SST v4 | SST v4 (Ion/Pulumi) |
+| Infrastructure as Code | SST v4 (Pulumi) | Latest |
 | Database | Aurora Serverless v2 (PostgreSQL) | PostgreSQL 15 |
 | ORM | Drizzle ORM | Latest |
 | Authentication | Amazon Cognito | - |
@@ -40,7 +40,7 @@ Next Generation MRV (Monitoring, Reporting, and Verification) Prototype for the 
 | Package Manager | pnpm | 9+ |
 | Monorepo | pnpm workspaces | - |
 
-**Note on IaC:** SOW specifies "AWS CDK and/or Serverless." We use SST v3 (Pulumi-based), which provides higher-level serverless constructs on AWS. Deviation should be approved by client.
+**Note on IaC:** SOW specifies "AWS CDK and/or Serverless." We use SST v4 (Pulumi-based), which provides higher-level serverless constructs on AWS. Deviation should be approved by client.
 
 ---
 
@@ -94,7 +94,7 @@ Full schema with columns, constraints, indexes, and seed data in DBSCHEMA.pdf. A
 
 ```
 worldbank-poc/
-├── sst.config.ts              # SST v3 configuration
+├── sst.config.ts              # SST v4 configuration
 ├── infra/                     # SST infrastructure definitions
 │   ├── vpc.ts, database.ts, auth.ts, storage.ts, api.ts, email.ts, monitoring.ts, web.ts
 ├── packages/

@@ -1,150 +1,112 @@
 # COMM — mrv-prototype
 
 ## Status
-DONE_AWAITING_REVIEW
+WAITING_FOR_WORKER
 
 ## Timestamps
 - Created: 2026-04-02T12:15:00Z
-- Last updated: 2026-04-02T13:50:00Z
-- Task assigned: 2026-04-02T13:50:00Z
+- Last updated: 2026-04-02T14:15:00Z
+- Task assigned: 2026-04-02T14:15:00Z
 
 ## Current Task
-Task 4a: Core Business Logic & API Utilities (no AWS required)
+Task 2: SST v4 Infrastructure Definitions (code only, no deploy)
 
 ## Task Details
-Build the shared business logic layer in `packages/core` that all Lambda handlers will use. This can be written and unit-tested without AWS credentials. The actual Lambda handlers and SST wiring come in Task 2 + Task 4b.
+Write all SST v4 (Ion/Pulumi) infrastructure definitions in the `infra/` directory. This is CODE ONLY — do NOT run `sst dev` or `sst deploy`. No AWS credentials are available. All code must pass `pnpm typecheck` and `pnpm lint`.
 
-Work in `packages/core/src/`:
+**IMPORTANT:** SST v4 uses Ion (Pulumi-based). Use the `sst` v4 APIs — `new sst.aws.*` components. Check the installed SST version in the project and upgrade to v4 if needed (`pnpm add sst@latest --save-dev` at root). SST v4 docs: the `$config` export, `sst.aws.Vpc`, `sst.aws.Postgres`, `sst.aws.Cognito`, `sst.aws.ApiGatewayV2`, `sst.aws.Nextjs`, `sst.aws.Bucket`, etc.
 
-1. **Auth types & helpers** — `packages/core/src/auth/`:
-   - `types.ts` — define `UserContext` type: `{ userId: string; cognitoSub: string; email: string; organizationId: string; role: 'ADMIN' | 'MEMBER'; groups: ('fmt' | 'country' | 'auditor')[]; orgType: 'WORLD_BANK' | 'COUNTRY' | 'AUDITOR' }`
-   - `rbac.ts` — RBAC helper functions:
-     - `requireRole(context: UserContext, ...roles: string[]): void` — throws 403 if user not in role
-     - `requireGroup(context: UserContext, ...groups: string[]): void` — throws 403 if user not in group
-     - `isFmt(context: UserContext): boolean`
-     - `isCountry(context: UserContext): boolean`
-     - `isAuditor(context: UserContext): boolean`
-   - `scope.ts` — Data isolation helpers:
-     - `scopeByOrganization(context: UserContext): { organizationId: string }` — returns org filter for queries
-     - `canAccessReport(context: UserContext, report: { countryId: string; country: { organizationId: string; auditorOrganizationId?: string } }): boolean`
-   - `index.ts` — barrel export
+Work in `infra/` and `sst.config.ts`:
 
-2. **API utilities** — `packages/core/src/api/`:
-   - `errors.ts` — structured error classes matching ARCHITECTURE.pdf Section 11.1:
-     - `AppError` base class with `code`, `message`, `statusCode`, `details`
-     - `ValidationError` (400), `UnauthorizedError` (401), `ForbiddenError` (403), `NotFoundError` (404), `ConflictError` (409), `InternalError` (500)
-     - `formatErrorResponse(error: AppError): { error: { code: string; message: string; details?: any } }`
-   - `pagination.ts` — cursor pagination helper:
-     - `parsePaginationParams(query: { limit?: string; cursor?: string }): { limit: number; cursor?: string }`
-     - `buildPaginatedResponse<T>(data: T[], limit: number, cursorField: string): { data: T[]; meta: { pageSize: number; total?: number; nextCursor?: string } }`
-   - `validation.ts` — Zod validation wrapper:
-     - `validateBody<T>(schema: ZodSchema<T>, body: unknown): T` — throws ValidationError with field-level details on failure
-     - `validateQuery<T>(schema: ZodSchema<T>, query: unknown): T`
-   - `index.ts` — barrel export
+1. **Update sst.config.ts** for SST v4:
+   - Ensure correct v4 config format
+   - Import and call all infra modules in the `run()` function
+   - App name: `worldbank-mrv`, region: `us-east-1`
+   - Stages: `dev`, `staging`, `prod` with appropriate settings
 
-3. **Audit log helper** — `packages/core/src/audit/`:
-   - `audit.ts` — `logAction(db: any, userId: string, action: string, entityType: string, entityId: string, metadata?: Record<string, unknown>): Promise<void>`
-   - Types for common actions: `report.submit`, `report.revision`, `template.publish`, `comment.create`, `user.invite`
-   - `index.ts` — barrel export
+2. **infra/vpc.ts** — VPC:
+   - 2 public subnets (NAT Gateway), 2 private app subnets, 2 private DB subnets
+   - Export VPC for use by other infra modules
+   - Use SST v4's VPC component or raw AWS provider if SST doesn't wrap VPC
 
-4. **Report workflow state machine** — `packages/core/src/services/`:
-   - `report-workflow.ts` — implements the state machine from ARCHITECTURE.pdf Section 10:
-     - Define valid transitions map
-     - `canTransition(currentStatus: ReportStatus, targetStatus: ReportStatus): boolean`
-     - `getValidTransitions(currentStatus: ReportStatus): ReportStatus[]`
-     - `validateTransition(currentStatus: ReportStatus, targetStatus: ReportStatus, context: { allSectionsComplete?: boolean; hasOpenComments?: boolean; hasAssignedAuditor?: boolean }): { valid: boolean; reason?: string }`
-     - Guard conditions per ARCHITECTURE.pdf Section 10.3
-   - Unit tests in `report-workflow.test.ts` — test every valid transition AND every invalid transition
+3. **infra/database.ts** — Aurora Serverless v2 + RDS Proxy:
+   - Aurora Serverless v2 PostgreSQL 15 cluster
+   - Dev: 0.5-2 ACU, Prod: 2-16 ACU (use `$app.stage` to switch)
+   - RDS Proxy for Lambda connection pooling
+   - Secrets Manager for credentials
+   - Place in private DB subnets
+   - Export database connection info for Lambda functions
 
-5. **Zod domain schemas** — `packages/core/src/domain/`:
-   - `schemas.ts` — Zod schemas for API request validation:
-     - `createOrganizationSchema`, `updateOrganizationSchema`
-     - `inviteUserSchema`, `updateUserSchema`
-     - `createCountrySchema`, `updateCountrySchema`, `assignAuditorSchema`
-     - `createTemplateSchema`, `updateTemplateSchema`
-     - `createSectionSchema`, `updateSectionSchema`, `reorderSectionsSchema`
-     - `saveReportSectionSchema` (content jsonb, is_complete boolean)
-     - `createCommentSchema`, `updateCommentSchema`
-   - `index.ts` — barrel export
+4. **infra/auth.ts** — Cognito:
+   - Cognito User Pool with groups: `fmt`, `country`, `auditor`
+   - App Client with SRP auth flow
+   - Post-confirmation Lambda trigger (reference, don't implement handler yet)
+   - Export User Pool ID and Client ID for frontend
 
-6. **Update root barrel** — `packages/core/src/index.ts` exporting all modules
+5. **infra/storage.ts** — S3:
+   - Bucket for file storage (PDF exports)
+   - Block all public access
+   - SSE-S3 encryption
+   - Versioning enabled
+   - Naming: `{stage}-worldbank-mrv-storage`
+
+6. **infra/api.ts** — API Gateway + Lambda functions:
+   - HTTP API (API Gateway v2) with JWT authorizer (Cognito)
+   - CORS config: allow frontend domain, GET/POST/PUT/DELETE, Authorization/Content-Type headers
+   - Route definitions for ALL endpoints from ARCHITECTURE.pdf Section 11:
+     - Auth: POST /auth/callback, GET /auth/me, POST /auth/change-password
+     - Templates: GET/POST /templates, GET/PUT/DELETE /templates/:id, POST /templates/:id/publish, POST /templates/:id/clone, POST /templates/:id/sections, PUT/DELETE /templates/:id/sections/:sectionId, PUT /templates/:id/sections/reorder
+     - Reports: GET/POST /reports, GET/DELETE /reports/:id, PUT /reports/:id/sections/:sectionId, POST /reports/:id/validate, POST /reports/:id/submit, POST /reports/:id/request-revision, POST /reports/:id/approve, POST /reports/:id/forward-to-auditor, POST /reports/:id/complete, GET /reports/:id/revisions, GET /reports/:id/revisions/:revisionId, GET /reports/:id/revisions/:revisionId/diff, GET /reports/:id/export/pdf
+     - Comments: GET/POST /reports/:id/comments, PUT /comments/:id, POST /comments/:id/resolve, POST /comments/:id/reopen
+     - Organizations: GET/POST /organizations, PUT /organizations/:id, GET /organizations/:id/users, POST /organizations/:id/users, PUT /users/:id
+     - Countries: GET/POST /countries, PUT /countries/:id, POST /countries/:id/assign-auditor
+     - Notifications: GET /notifications, PUT /notifications/:id/read, POST /notifications/read-all, GET /notifications/unread-count
+     - Health: GET /health
+   - Each route points to a Lambda handler file in `packages/functions/src/` (create placeholder handler files)
+   - Lambda config per ARCHITECTURE.pdf Section 13.2:
+     - API handlers: 256 MB, 15s timeout
+     - PDF export: 1024 MB, 60s timeout
+     - Auth handlers: 256 MB, 10s timeout
+     - DB migrations: 512 MB, 120s timeout
+   - Link database, auth, and storage to functions that need them
+
+7. **infra/web.ts** — Next.js frontend:
+   - SST v4 `Nextjs` component
+   - Environment variables: API URL, Cognito User Pool ID, Cognito Client ID, AWS region
+   - CloudFront distribution (managed by SST)
+
+8. **Create placeholder Lambda handlers** in `packages/functions/src/`:
+   - One file per API group: `auth.ts`, `templates.ts`, `reports.ts`, `comments.ts`, `organizations.ts`, `countries.ts`, `notifications.ts`, `health.ts`, `exports.ts`
+   - Each exports named handler functions matching the route definitions (stub implementations that return 501 Not Implemented)
+   - Use the pattern: `export async function handler(event: APIGatewayProxyEventV2): Promise<APIGatewayProxyResultV2>`
 
 ## Acceptance Criteria
-- [x] All auth helpers implemented with correct RBAC logic per ARCHITECTURE.pdf Section 7
-- [x] All error classes match the API error response format in Section 11.1
-- [x] Pagination helper supports cursor-based pagination
-- [x] Zod validation wrapper returns field-level error details
-- [x] Report workflow state machine implements ALL valid transitions from Section 10.2
-- [x] State machine guard conditions implemented per Section 10.3
-- [x] Unit tests for report workflow: test every valid transition returns true, every invalid returns false
-- [x] Unit tests for RBAC helpers: test FMT/Country/Auditor access patterns
-- [x] Zod schemas exist for all major API request bodies
-- [x] `pnpm typecheck` passes
-- [x] `pnpm lint` passes
-- [x] `pnpm test` passes with all new tests green
+- [ ] `sst.config.ts` updated for SST v4 format with all infra imports
+- [ ] All 6 infra files implemented: vpc.ts, database.ts, auth.ts, storage.ts, api.ts, web.ts
+- [ ] API routes cover ALL endpoints from ARCHITECTURE.pdf Section 11
+- [ ] Lambda handler placeholder files exist for all API groups
+- [ ] Lambda memory/timeout configs match Section 13.2
+- [ ] Cognito User Pool has 3 groups (fmt, country, auditor)
+- [ ] S3 bucket configured with no public access + encryption
+- [ ] `pnpm typecheck` passes
+- [ ] `pnpm lint` passes
+- [ ] All existing tests still pass (134 tests)
+- [ ] NO `sst dev` or `sst deploy` commands executed
 
 ## Code Repo Branch
-feature/task-4a-core-business-logic
+feature/task-2-sst-infrastructure
 
 ## Coordinator Notes
-Priority: HIGH — this is the logic layer that all API handlers will import.
-Branch from `feature/task-3-database-schema` (Task 3 approved).
-Reference: ARCHITECTURE.pdf Sections 7 (RBAC), 10 (State Machine), 11 (API Spec).
-Read the ARCHITECTURE.pdf for the RBAC matrix, state transitions, and error format.
-Add `zod` as a dependency to `packages/core`.
-Write real unit tests — this is critical business logic. Use Vitest.
-No AWS needed — pure TypeScript logic + tests.
+Priority: HIGH — this wires everything together.
+Branch from `feature/task-4a-core-business-logic` (latest approved task).
+**SST v4 (Ion)** — NOT v3. Upgrade the sst package if needed.
+Reference: ARCHITECTURE.pdf Sections 6 (VPC/Security Groups), 8 (Cognito), 11 (API endpoints), 13 (Infrastructure config).
+CODE ONLY — no deployments. No AWS credentials available.
+The `.sst/` types won't fully resolve without `sst dev`, but the code should be structurally correct TypeScript.
+If SST v4 types aren't available without running sst, use type assertions or `any` casts sparingly — prefer structural correctness over perfect types.
 
 ## Worker Notes
-- 2026-04-02: Started work on Task 4a. Read ARCHITECTURE.pdf sections 7, 10, 11 for RBAC, state machine, and API error format.
-- 2026-04-02: COMPLETED. All modules implemented and tested. Summary:
-
-### What was built (22 files, 1203 lines added)
-
-**Auth module** (`packages/core/src/auth/`):
-- `types.ts` — `UserContext` type with userId, cognitoSub, email, organizationId, role, groups, orgType
-- `rbac.ts` — `requireRole()`, `requireGroup()` (throw ForbiddenError), `isFmt()`, `isCountry()`, `isAuditor()`
-- `scope.ts` — `scopeByOrganization()`, `canAccessReport()` with data isolation per Section 7.3 (FMT=all, Country=own org, Auditor=assigned countries)
-- 19 unit tests covering all RBAC patterns
-
-**API utilities** (`packages/core/src/api/`):
-- `errors.ts` — `AppError` base + `ValidationError`(400), `UnauthorizedError`(401), `ForbiddenError`(403), `NotFoundError`(404), `ConflictError`(409), `InternalError`(500) + `formatErrorResponse()` matching Section 11.1 envelope
-- `pagination.ts` — `parsePaginationParams()` (default 20, max 100) + `buildPaginatedResponse()` with cursor
-- `validation.ts` — `validateBody()`, `validateQuery()` wrapping Zod with field-level error details
-- 22 unit tests for errors, pagination, and validation
-
-**Audit module** (`packages/core/src/audit/`):
-- `audit.ts` — `logAction()` + `AuditAction` type for common actions (report.submit, report.revision, template.publish, etc.)
-
-**Report workflow state machine** (`packages/core/src/services/`):
-- `report-workflow.ts` — All 10 valid transitions from Section 10.2, all 6 guard conditions from Section 10.3
-- Guard: DRAFT→SUBMITTED_TO_FMT requires allSectionsComplete
-- Guard: FMT_REVIEW→FMT_REVISION_REQUESTED requires hasOpenComments
-- Guard: FMT_REVIEW→FMT_APPROVED requires !hasOpenComments
-- Guard: FMT_APPROVED→SUBMITTED_TO_AUDITOR requires hasAssignedAuditor
-- Guard: AUDITOR_REVIEW→AUDITOR_REVISION_REQUESTED requires hasOpenComments
-- Guard: AUDITOR_REVIEW→COMPLETED requires !hasOpenComments
-- 93 unit tests: every valid transition returns true, every invalid pair returns false, all guards tested
-
-**Domain schemas** (`packages/core/src/domain/`):
-- 15 Zod schemas for all API request bodies: organizations, users, countries, templates, sections, reports, comments
-
-**Root barrel** (`packages/core/src/index.ts`): re-exports all modules
-
-### Verification
-- `pnpm typecheck` — passes
-- `pnpm lint` — passes (0 errors)
-- `pnpm test` — 134 tests, 5 test files, all passing
-
-### Dependencies added
-- `zod` added to `packages/core`
-
-### Design decisions
-- RBAC helpers throw `ForbiddenError` directly (consistent with API error classes)
-- `canAccessReport()` implements Section 7.3 data isolation: FMT sees all, Country sees own org, Auditor sees assigned countries
-- Pagination uses "fetch limit+1" pattern to detect hasMore without separate count query
-- Audit `logAction()` accepts a generic db interface to avoid coupling to drizzle schema (will be wired in Task 4b)
-- State machine uses string-based transition key (`from->to`) for clean guard condition dispatch
+(none yet)
 
 ## Revision History
 (none)
