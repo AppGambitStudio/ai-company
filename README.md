@@ -13,7 +13,7 @@ An AI-native software agency powered by Claude Code CLI. A human CEO provides di
 ### 1. Prerequisites
 
 - macOS or Linux
-- Claude Code CLI v2.1.72+ (`claude --version`)
+- Claude Code CLI v2.1.89+ (`claude --version`)
 - Authenticated Claude account (`claude` opens a session)
 - `jq` installed (`brew install jq`)
 - `git` configured with push access to your repos

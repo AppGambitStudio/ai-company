@@ -7,7 +7,7 @@
 ## Prerequisites
 
 - macOS or Linux
-- Claude Code CLI v2.1.72+ (`claude --version`)
+- Claude Code CLI v2.1.89+ (`claude --version`)
 - Authenticated Claude account (`claude` should open a session without errors)
 - `jq` installed (`brew install jq` on macOS)
 - `git` configured with push access to your repos

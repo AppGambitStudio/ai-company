@@ -1,0 +1,6 @@
+# logs and env
+*.log
+.env
+
+# superpowers
+docs/superpowers/
