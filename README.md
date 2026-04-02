@@ -104,36 +104,91 @@ Use these in the Coordinator session for quick operations:
 
 ---
 
-## How It Works
+## Architecture
 
 ```
-CEO (you)
-  │
-  ├── Gives direction via live session or Channel (Telegram/Discord)
-  ├── Reads CEO_INBOX.md for updates and escalations
-  ├── Approves milestones, resolves escalations
-  │
-  ▼
-Coordinator (AI — runs as Claude Code session)
-  │
-  ├── Converts briefs into PROJECT.md
-  ├── Breaks milestones into tasks (MILESTONES.md)
-  ├── Assigns tasks via COMM.md
-  ├── Reviews code, approves or rejects
-  ├── Launches workers via `claude -p` headless mode
-  ├── Reports to CEO via CEO_INBOX.md + Channel
-  │
-  ▼
-Workers (AI — run as headless `claude -p` processes)
-  │
-  ├── Read COMM.md for task assignment
-  ├── Write code in the project's code repo
-  ├── Run tests, commit to feature branch
-  ├── Update COMM.md when done
-  └── One session per project, subagents for parallelism
++-----------------------------------------------------------------------------------+
+|                              HOST MACHINE (Mac/Linux)                             |
+|                                                                                   |
+|  +------------------+    CEO_CONFIG.md     +----------------------------------+   |
+|  |    HUMAN CEO     |    CEO_INBOX.md      |        AI COORDINATOR            |   |
+|  |                  |<-------------------->|     (Claude Code CLI session)     |   |
+|  |  - Direction     |    Channel           |                                  |   |
+|  |  - Approvals     |   (Telegram/         |  - Runs in tmux (persistent)     |   |
+|  |  - Escalations   |    Discord/Slack)    |  - /loop 15m (round-robin)       |   |
+|  +------------------+                      |  - Reads coordinator/CLAUDE.md   |   |
+|                                            |  - Reads CEO_CONFIG.md           |   |
+|                                            +--+----------+-------------------+   |
+|                                               |          |                       |
+|                              launches via     |          |  launches via          |
+|                              claude -p        |          |  claude -p             |
+|                                               |          |                       |
+|                   +---------------------------+          +-------------------+    |
+|                   |                                                          |    |
+|                   v                                                          v    |
+|  +-------------------------------+              +-------------------------------+ |
+|  |        AI WORKER 1            |              |        AI WORKER 2            | |
+|  |   (headless claude -p)        |              |   (headless claude -p)        | |
+|  |                               |              |                               | |
+|  |  - bypassPermissions mode     |              |  - bypassPermissions mode     | |
+|  |  - hooks for guardrails       |              |  - hooks for guardrails       | |
+|  |  - one session per project    |              |  - one session per project    | |
+|  |  - subagents for parallelism  |              |  - subagents for parallelism  | |
+|  +-------+---+-------------------+              +-------+---+-------------------+ |
+|          |   |                                          |   |                     |
+|          |   |  reads/writes                            |   |  reads/writes       |
+|          |   |                                          |   |                     |
++----------|---|------------------------------------------|---|---------------------+
+           |   |                                          |   |
+           v   v                                          v   v
++-------------------+  +-------------------+  +-------------------+
+| MANAGEMENT REPO   |  |  CODE REPO A      |  |  CODE REPO B      |
+| (ai-company/)     |  |  (project-a/)     |  |  (project-b/)     |
+|                   |  |                   |  |                   |
+| - COMM.md (x N)   |  | - Source code     |  | - Source code     |
+| - REGISTRY.md     |  | - Tests           |  | - Tests           |
+| - CEO_INBOX.md    |  | - Feature branches|  | - Feature branches|
+| - MILESTONES.md   |  | - CLAUDE.md       |  | - CLAUDE.md       |
+| - PROJECT.md      |  | - MEMORY.md       |  | - MEMORY.md       |
+| - REVIEW_LOG.md   |  |                   |  |                   |
++-------------------+  +-------------------+  +-------------------+
+        |                       |                       |
+        +---------- all repos on GitHub (private) ------+
 ```
 
-**Communication protocol:** Git commits on a private management repo. Every state change is a commit. No database, no queue, no custom framework.
+### Communication Flow
+
+```
+CEO -----> Coordinator -----> Worker
+     brief      COMM.md         code
+     approve    (task)          (feature branch)
+     escalate
+                                    |
+CEO <----- Coordinator <----- Worker
+     CEO_INBOX   REVIEW_LOG    COMM.md
+     Channel     (verdict)     (DONE_AWAITING_REVIEW)
+```
+
+### State Machine (per task)
+
+```
+WAITING_FOR_WORKER --> IN_PROGRESS --> DONE_AWAITING_REVIEW --> APPROVED --> next task
+                           |                                       |
+                           +--> RATE_LIMITED (auto-resumes)         +--> REVISION_NEEDED
+                           |                                              (worker fixes)
+                           +--> BLOCKED --> ESCALATED_TO_CEO
+```
+
+### Round-Robin Loop (Coordinator)
+
+```
+Every 15 minutes:
+  git pull --> REGISTRY.md --> pick project N --> read COMM.md --> process --> git push
+                                    |
+                               rotate to N+1
+```
+
+**Protocol:** Git commits on a private management repo. Every state change is a commit. No database, no queue, no custom framework.
 
 ---
 
