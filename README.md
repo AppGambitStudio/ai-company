@@ -24,11 +24,17 @@ An AI-native software agency powered by Claude Code CLI. A human CEO provides di
 ```bash
 cd /path/to/ai-company
 
+# Copy runtime files from templates
+cp CEO_CONFIG.template.md CEO_CONFIG.md        # customize with your preferences
+cp CEO_INBOX.template.md CEO_INBOX.md
+cp coordinator/REGISTRY.template.md coordinator/REGISTRY.md
+cp coordinator/DAILY_LOG.template.md coordinator/DAILY_LOG.md
+
+# Create projects directory
+mkdir -p projects
+
 # Verify hook scripts are executable
 chmod +x scripts/hooks/*.sh
-
-# Verify runtime files exist (CEO_INBOX.md, REGISTRY.md, DAILY_LOG.md)
-# If missing, see docs/SETUP.md for templates
 ```
 
 ### 3. Start the Coordinator
