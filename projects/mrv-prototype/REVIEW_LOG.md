@@ -20,3 +20,10 @@
 - Notes: 134 tests all passing. State machine matches ARCHITECTURE.pdf Section 10 exactly — all 10 valid transitions, all 6 guard conditions. RBAC helpers clean with ForbiddenError throws. Error classes match Section 11.1 envelope format. Pagination uses fetch-limit+1 pattern. 15 Zod schemas cover all API request bodies. Audit helper properly decoupled from db driver.
 - Files reviewed: packages/core/src/services/report-workflow.ts, auth/rbac.ts, auth/scope.ts, auth/types.ts, api/errors.ts, api/pagination.ts, api/validation.ts, audit/audit.ts, domain/schemas.ts, all test files
 - Test results: 134 tests, 5 files, all green (pnpm typecheck pass, pnpm lint pass, pnpm test pass)
+
+## Task 2: SST v4 Infrastructure Definitions
+- Reviewed: 2026-04-02T14:30:00Z
+- Verdict: APPROVED
+- Notes: SST v4.6.10 installed. sst.config.ts correct (worldbank-mrv, us-east-1, stage-based removal). All 6 infra files: VPC (2 AZs, NAT), Aurora Serverless v2 (stage-based ACU), Cognito (3 groups noted), S3 (versioning, no public access), API Gateway (42 routes, JWT auth, correct memory/timeout per Section 13.2), Nextjs frontend. 9 Lambda handler placeholder files with typed 501 stubs. Custom sst-env.d.ts for type safety without sst dev. No AWS calls made. Minor notes: Cognito groups need Pulumi raw resources, CORS allowOrigins should be restricted for prod.
+- Files reviewed: sst.config.ts, sst-env.d.ts, infra/vpc.ts, database.ts, auth.ts, storage.ts, api.ts, web.ts, packages/functions/src/*.ts
+- Test results: pnpm typecheck (pass), pnpm lint (pass), pnpm test (134/134 pass)
