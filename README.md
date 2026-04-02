@@ -19,10 +19,11 @@ An AI-native software agency powered by Claude Code CLI. A human CEO provides di
 - `git` configured with push access to your repos
 - `tmux` for persistent sessions (`brew install tmux`)
 
-### 2. Initialize (first time only)
+### 2. Clone and Initialize
 
 ```bash
-cd /path/to/ai-company
+git clone https://github.com/AppGambitStudio/ai-company.git
+cd ai-company
 
 # Copy runtime files from templates
 cp CEO_CONFIG.template.md CEO_CONFIG.md        # customize with your preferences
@@ -44,7 +45,7 @@ chmod +x scripts/hooks/*.sh
 tmux new-session -s coordinator
 
 # Navigate to the management repo
-cd /path/to/ai-company
+cd ai-company
 
 # Launch Claude Code
 claude --permission-mode bypassPermissions
