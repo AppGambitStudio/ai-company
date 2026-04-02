@@ -843,6 +843,7 @@ docker sandbox run appgambit-ai ~/ai-company -- \
 
 ---
 
-*Spec version: 1.0*
+*Spec version: 1.1*
 *Last updated: 2026-04-02*
 *Author: Dhaval Nagar + Claude (APPGAMBIT AI Company design session)*
+*Amendment: Rolling window protocol, discovery phase, worker autonomy (v1.1)*
