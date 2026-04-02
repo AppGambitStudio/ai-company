@@ -214,7 +214,10 @@ When CEO says "New project: [brief]":
    - Best interpretation of requirements
    - Tech stack recommendation
    - Assumptions made (numbered)
-   - Open questions (numbered)
+   - Open questions (numbered) — MUST include these if not already known:
+     - Where is the code repo on this machine? (absolute path, e.g., `/Users/dhaval/Documents/work/...`)
+     - What is the GitHub remote URL? (e.g., `git@github.com:appgambit/project-name.git`)
+     - Does the repo already exist, or should we create it?
    - Proposed milestones (3-5)
 6. If CEO provided reference docs in `projects/{name}/docs/`, read them and incorporate into PROJECT.md (requirements, constraints, acceptance criteria from SOW)
 7. Update REGISTRY.md: add project with status = DISCOVERY

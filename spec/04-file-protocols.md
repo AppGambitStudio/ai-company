@@ -88,14 +88,16 @@ Customer-facing portal for XYZ Corp. Role-based dashboard with SSO.
 XYZ Corp. Contact: [name]. Timezone: IST.
 
 ## Tech Stack
-Next.js 15, TypeScript, Node.js, PostgreSQL, SST v3, AWS ap-south-1
+Next.js 15, TypeScript, Node.js, PostgreSQL, SST v3, AWS us-east-2 or us-west-2. 
+As a note, always avoid us-east-1 as that's most congested region. 
 
 ## Code Repo
-git@github.com:appgambit/client-xyz.git
+- Remote: git@github.com:appgambit/client-xyz.git
+- Local path: /Users/dhaval/Documents/work/antigravity/client-xyz
 
 ## Constraints
 - Azure AD SSO (OIDC)
-- Deploy to ap-south-1
+- Deploy to us-east-2 or us-west-2. 
 - Budget: ~40 hours equivalent
 - Client demo: Friday April 4
 
@@ -125,7 +127,7 @@ Task breakdown created and maintained by Coordinator.
 
 ### Task 1: Project scaffolding ✅
 - Setup Next.js 15, TypeScript strict, ESLint, Prettier
-- SST v3 config for ap-south-1
+- SST v3 config for us-east-2
 - Acceptance: `npm run build` passes, deploys to dev
 - Assigned: Employee 1 | Completed: April 2 09:30
 
@@ -270,5 +272,5 @@ Source: Live session with CEO
 ## CEO's Input
 We need a customer portal for XYZ Corp. They want SSO with their Azure AD,
 role-based dashboards (admin, manager, viewer), and a report generation module.
-Demo is Friday. They're on AWS ap-south-1. Use Next.js + SST.
+Demo is Friday. They're on AWS us-east-2. Use Next.js + SST.
 ```
