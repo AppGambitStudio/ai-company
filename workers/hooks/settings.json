@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/path/to/ai-company/workers/hooks/block-dangerous-commands.sh"
+            "command": "/path/to/ai-company/scripts/hooks/block-dangerous-commands.sh"
           }
         ]
       },
@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/path/to/ai-company/workers/hooks/block-interactive-commands.sh"
+            "command": "/path/to/ai-company/scripts/hooks/block-interactive-commands.sh"
           }
         ]
       }
