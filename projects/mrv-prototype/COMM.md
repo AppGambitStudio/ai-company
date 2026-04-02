@@ -1,7 +1,7 @@
 # COMM — mrv-prototype
 
 ## Status
-WAITING_FOR_WORKER
+IN_PROGRESS
 
 ## Timestamps
 - Created: 2026-04-02T12:15:00Z
