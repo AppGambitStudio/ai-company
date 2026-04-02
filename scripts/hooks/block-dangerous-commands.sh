@@ -20,10 +20,20 @@ BLOCKED_PATTERNS=(
   "mkfs\."
   "dd if="
   ":(){:|:&};:"
+  "chmod -R 777"
+  "chown -R"
+  "curl.*| bash"
+  "curl.*| sh"
+  "wget.*| bash"
+  "wget.*| sh"
+  "eval \""
+  "npm publish"
+  "git push.*main"
+  "git push.*master"
 )
 
 for pattern in "${BLOCKED_PATTERNS[@]}"; do
-  if echo "$COMMAND" | grep -qi "$pattern"; then
+  if echo "$COMMAND" | grep -qiE "$pattern"; then
     echo "BLOCKED: Command matches dangerous pattern '$pattern'. This command is not allowed." >&2
     exit 2
   fi

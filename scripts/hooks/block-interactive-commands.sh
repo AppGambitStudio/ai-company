@@ -18,6 +18,20 @@ INTERACTIVE_PATTERNS=(
   "ssh-keygen"
   "passwd"
   "sudo -S"
+  "vim "
+  "nano "
+  "vi "
+  "emacs "
+  "less "
+  "more "
+  "top$"
+  "htop$"
+  "mysql$"
+  "psql$"
+  "mongo$"
+  "python$"
+  "node$"
+  "irb$"
 )
 
 for pattern in "${INTERACTIVE_PATTERNS[@]}"; do

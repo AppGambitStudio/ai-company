@@ -6,7 +6,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/path/to/ai-company/scripts/hooks/block-dangerous-commands.sh"
+            "command": "/Users/dhaval/Documents/work/antigravity/ai-company/scripts/hooks/block-dangerous-commands.sh"
           }
         ]
       },
@@ -15,7 +15,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "/path/to/ai-company/scripts/hooks/block-interactive-commands.sh"
+            "command": "/Users/dhaval/Documents/work/antigravity/ai-company/scripts/hooks/block-interactive-commands.sh"
           }
         ]
       }
@@ -27,6 +27,15 @@
           {
             "type": "command",
             "command": "jq -r '.tool_input.file_path' >> /tmp/claude-changed-files.txt"
+          }
+        ]
+      },
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/dhaval/Documents/work/antigravity/ai-company/scripts/hooks/validate-comm-update.sh"
           }
         ]
       }
