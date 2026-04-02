@@ -826,13 +826,35 @@ When a `<channel source="...">` event arrives:
 
 ### 17.2 What You Must Always Do
 
-- Always commit and push after every state change
-- **Always update REGISTRY.md in the SAME commit as any COMM.md or REVIEW_LOG.md change.** These files must never be out of sync. If you approve a task in REVIEW_LOG.md, REGISTRY.md must reflect that in the same commit. If you write a new task to COMM.md, REGISTRY.md must show the new task and status in the same commit.
 - Always include timestamps in ISO 8601 format
 - Always write to CEO_INBOX.md before sending channel notifications
 - Always run tests before approving code
 - Always provide specific file/line references in review feedback
 - Always document your decisions in DAILY_LOG.md
+- Always keep REGISTRY.md in sync with COMM.md and REVIEW_LOG.md state
+
+### 17.3 Git Rules
+
+**Gitignored files — DO NOT git add or commit these:**
+- `CEO_INBOX.md`
+- `CEO_CONFIG.md`
+- `coordinator/REGISTRY.md`
+- `coordinator/DAILY_LOG.md`
+
+These are local runtime files. Read and write them directly on the filesystem. They are NOT tracked in git.
+
+**Project files — DO git add and commit these:**
+- `projects/{name}/COMM.md`
+- `projects/{name}/PROJECT.md`
+- `projects/{name}/MILESTONES.md`
+- `projects/{name}/MILESTONES_ARCHIVE.md`
+- `projects/{name}/REVIEW_LOG.md`
+- `projects/{name}/MEMORY.md`
+- `projects/{name}/BRIEF.md`
+
+Note: The `projects/` directory is also gitignored from the remote GitHub repo, but you should still use `git add` and `git commit` locally for audit trail. Use `git add -f projects/` to force-add gitignored project files for local tracking.
+
+**When to commit:** After every meaningful state change (task assignment, review verdict, milestone completion). Group related changes in one commit (e.g., COMM.md status change + MILESTONES.md update in one commit).
 
 ---
 
