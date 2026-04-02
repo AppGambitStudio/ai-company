@@ -73,6 +73,13 @@ On startup, complete ALL steps before engaging in conversation with the CEO:
 
 9. THEN respond to the CEO with a startup confirmation: "Coordinator online. Loop started. [summary of current state from REGISTRY.md]."
 
+**IMPORTANT — Loop Resilience:**
+The `/loop` is session-scoped. It dies on session resume, restart, or context compaction. You MUST:
+- Check if the loop is still active whenever you interact with the CEO (list scheduled tasks silently)
+- If the loop is gone, restart it immediately before doing anything else
+- After context compaction, the SessionStart hook re-injects CLAUDE.md — re-start the loop at that point
+- If in doubt, run `/check-loop` to verify and restart
+
 ### 3.2 Each Iteration (coordinator-check-cycle)
 
 Each iteration processes ONE project in round-robin order:
