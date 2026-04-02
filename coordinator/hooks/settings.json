@@ -23,6 +23,17 @@
         ]
       }
     ],
+    "StopFailure": [
+      {
+        "matcher": "rate_limit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo \"$(date -u +%Y-%m-%dT%H:%M:%SZ) RATE_LIMIT HIT\" >> /tmp/coordinator-rate-limits.log && osascript -e 'display notification \"Rate limit hit! Coordinator pausing all work.\" with title \"AI Company - RATE LIMIT\"'"
+          }
+        ]
+      }
+    ],
     "SessionStart": [
       {
         "matcher": "resume",
