@@ -8,8 +8,9 @@ docs/superpowers/
 # project-specific data (never push client work)
 projects/
 
-# runtime files (contain live project data)
+# runtime files (contain live project/CEO data)
 CEO_INBOX.md
+CEO_CONFIG.md
 coordinator/REGISTRY.md
 coordinator/DAILY_LOG.md
 

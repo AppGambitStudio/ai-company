@@ -84,7 +84,7 @@
   - Backend: Node.js, Python (project-dependent)
   - Infrastructure: SST v3, AWS
   - Database: PostgreSQL (default), project-dependent
-- **Default deployment region:** ap-south-1 (Mumbai)
+- **Default deployment region:** us-east-2 or us-west-2. 
 - **Code repo hosting:** GitHub (private repos under `appgambit/`)
 
 ---
