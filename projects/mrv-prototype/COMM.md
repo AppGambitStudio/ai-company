@@ -1,7 +1,7 @@
 # COMM — mrv-prototype
 
 ## Status
-IN_PROGRESS
+DONE_AWAITING_REVIEW
 
 ## Timestamps
 - Created: 2026-04-02T12:15:00Z
@@ -70,18 +70,18 @@ Work in `packages/core/src/`:
 6. **Update root barrel** — `packages/core/src/index.ts` exporting all modules
 
 ## Acceptance Criteria
-- [ ] All auth helpers implemented with correct RBAC logic per ARCHITECTURE.pdf Section 7
-- [ ] All error classes match the API error response format in Section 11.1
-- [ ] Pagination helper supports cursor-based pagination
-- [ ] Zod validation wrapper returns field-level error details
-- [ ] Report workflow state machine implements ALL valid transitions from Section 10.2
-- [ ] State machine guard conditions implemented per Section 10.3
-- [ ] Unit tests for report workflow: test every valid transition returns true, every invalid returns false
-- [ ] Unit tests for RBAC helpers: test FMT/Country/Auditor access patterns
-- [ ] Zod schemas exist for all major API request bodies
-- [ ] `pnpm typecheck` passes
-- [ ] `pnpm lint` passes
-- [ ] `pnpm test` passes with all new tests green
+- [x] All auth helpers implemented with correct RBAC logic per ARCHITECTURE.pdf Section 7
+- [x] All error classes match the API error response format in Section 11.1
+- [x] Pagination helper supports cursor-based pagination
+- [x] Zod validation wrapper returns field-level error details
+- [x] Report workflow state machine implements ALL valid transitions from Section 10.2
+- [x] State machine guard conditions implemented per Section 10.3
+- [x] Unit tests for report workflow: test every valid transition returns true, every invalid returns false
+- [x] Unit tests for RBAC helpers: test FMT/Country/Auditor access patterns
+- [x] Zod schemas exist for all major API request bodies
+- [x] `pnpm typecheck` passes
+- [x] `pnpm lint` passes
+- [x] `pnpm test` passes with all new tests green
 
 ## Code Repo Branch
 feature/task-4a-core-business-logic
@@ -97,6 +97,54 @@ No AWS needed — pure TypeScript logic + tests.
 
 ## Worker Notes
 - 2026-04-02: Started work on Task 4a. Read ARCHITECTURE.pdf sections 7, 10, 11 for RBAC, state machine, and API error format.
+- 2026-04-02: COMPLETED. All modules implemented and tested. Summary:
+
+### What was built (22 files, 1203 lines added)
+
+**Auth module** (`packages/core/src/auth/`):
+- `types.ts` — `UserContext` type with userId, cognitoSub, email, organizationId, role, groups, orgType
+- `rbac.ts` — `requireRole()`, `requireGroup()` (throw ForbiddenError), `isFmt()`, `isCountry()`, `isAuditor()`
+- `scope.ts` — `scopeByOrganization()`, `canAccessReport()` with data isolation per Section 7.3 (FMT=all, Country=own org, Auditor=assigned countries)
+- 19 unit tests covering all RBAC patterns
+
+**API utilities** (`packages/core/src/api/`):
+- `errors.ts` — `AppError` base + `ValidationError`(400), `UnauthorizedError`(401), `ForbiddenError`(403), `NotFoundError`(404), `ConflictError`(409), `InternalError`(500) + `formatErrorResponse()` matching Section 11.1 envelope
+- `pagination.ts` — `parsePaginationParams()` (default 20, max 100) + `buildPaginatedResponse()` with cursor
+- `validation.ts` — `validateBody()`, `validateQuery()` wrapping Zod with field-level error details
+- 22 unit tests for errors, pagination, and validation
+
+**Audit module** (`packages/core/src/audit/`):
+- `audit.ts` — `logAction()` + `AuditAction` type for common actions (report.submit, report.revision, template.publish, etc.)
+
+**Report workflow state machine** (`packages/core/src/services/`):
+- `report-workflow.ts` — All 10 valid transitions from Section 10.2, all 6 guard conditions from Section 10.3
+- Guard: DRAFT→SUBMITTED_TO_FMT requires allSectionsComplete
+- Guard: FMT_REVIEW→FMT_REVISION_REQUESTED requires hasOpenComments
+- Guard: FMT_REVIEW→FMT_APPROVED requires !hasOpenComments
+- Guard: FMT_APPROVED→SUBMITTED_TO_AUDITOR requires hasAssignedAuditor
+- Guard: AUDITOR_REVIEW→AUDITOR_REVISION_REQUESTED requires hasOpenComments
+- Guard: AUDITOR_REVIEW→COMPLETED requires !hasOpenComments
+- 93 unit tests: every valid transition returns true, every invalid pair returns false, all guards tested
+
+**Domain schemas** (`packages/core/src/domain/`):
+- 15 Zod schemas for all API request bodies: organizations, users, countries, templates, sections, reports, comments
+
+**Root barrel** (`packages/core/src/index.ts`): re-exports all modules
+
+### Verification
+- `pnpm typecheck` — passes
+- `pnpm lint` — passes (0 errors)
+- `pnpm test` — 134 tests, 5 test files, all passing
+
+### Dependencies added
+- `zod` added to `packages/core`
+
+### Design decisions
+- RBAC helpers throw `ForbiddenError` directly (consistent with API error classes)
+- `canAccessReport()` implements Section 7.3 data isolation: FMT sees all, Country sees own org, Auditor sees assigned countries
+- Pagination uses "fetch limit+1" pattern to detect hasMore without separate count query
+- Audit `logAction()` accepts a generic db interface to avoid coupling to drizzle schema (will be wired in Task 4b)
+- State machine uses string-based transition key (`from->to`) for clean guard condition dispatch
 
 ## Revision History
 (none)
