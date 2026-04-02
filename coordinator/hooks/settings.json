@@ -22,6 +22,26 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "matcher": "resume",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'CRITICAL: Session was resumed. The /loop is dead. You MUST immediately run: /loop 15m coordinator-check-cycle — do this BEFORE anything else.'"
+          }
+        ]
+      },
+      {
+        "matcher": "compact",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "echo 'CRITICAL: Context was compacted. The /loop is dead. You MUST immediately run: /loop 15m coordinator-check-cycle — do this BEFORE anything else.' && cat coordinator/CLAUDE.md"
+          }
+        ]
+      }
     ]
   }
 }
