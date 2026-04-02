@@ -90,6 +90,8 @@ tmux attach -t coordinator
 
 Use these in the Coordinator session for quick operations:
 
+**Monitoring:**
+
 | Command | What it does |
 |---------|-------------|
 | `/status` | Overall system summary |
@@ -100,8 +102,26 @@ Use these in the Coordinator session for quick operations:
 | `/milestones {name}` | Milestone progress for a project |
 | `/review-log {name}` | Review history for a project |
 | `/daily-log` | Latest daily summary |
-| `/check-cycle` | Force one round-robin check now (don't wait for timer) |
 
+**Project Management:**
+
+| Command | What it does |
+|---------|-------------|
+| `/new-project {name} {brief}` | Onboard a new greenfield project (discovery flow) |
+| `/onboard-existing {name} {path}` | Onboard an existing project with code history |
+| `/assign-task {project} {task}` | Write task to COMM.md and launch worker |
+| `/launch-worker {project}` | Launch worker for a project with pending task |
+| `/pause-project {name}` | Temporarily pause, free worker slot |
+| `/close-project {name}` | Archive and remove from active management |
+
+**System Operations:**
+
+| Command | What it does |
+|---------|-------------|
+| `/check-cycle` | Force one round-robin check now (don't wait for timer) |
+| `/check-loop` | Verify loop is running, restart if dead |
+| `/check-usage` | Check rate limit history and capacity |
+| `/sync-registry` | Reconcile REGISTRY.md against actual project state |
 ---
 
 ## Architecture
@@ -153,7 +173,7 @@ Use these in the Coordinator session for quick operations:
 | - REVIEW_LOG.md   |  |                   |  |                   |
 +-------------------+  +-------------------+  +-------------------+
         |                       |                       |
-        +---------- all repos on GitHub (private) ------+
+        +---------- all repos on Git (public/private) ------+
 ```
 
 ### Communication Flow
