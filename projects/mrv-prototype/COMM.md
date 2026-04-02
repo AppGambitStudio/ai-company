@@ -1,7 +1,7 @@
 # COMM — mrv-prototype
 
 ## Status
-WAITING_FOR_WORKER
+IN_PROGRESS
 
 ## Timestamps
 - Created: 2026-04-02T12:15:00Z
@@ -85,7 +85,8 @@ Branch from `feature/task-1-monorepo-scaffolding` (Task 1 approved, not yet merg
 No AWS credentials yet — use a placeholder DATABASE_URL in drizzle config. Drizzle Kit can generate migrations without a live DB.
 
 ## Worker Notes
-(none yet)
+- Started work on Task 3: Database Schema & Seed Data
+- Working in feature/task-3-database-schema branch
 
 ## Revision History
 (none)
