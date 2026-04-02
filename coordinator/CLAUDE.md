@@ -58,12 +58,13 @@ Each project also has a separate **code repo** (e.g., `appgambit/client-xyz`) wh
 
 On startup:
 1. Read this file (CLAUDE.md) to load your operating manual
-2. **Self-check: resolve paths.** Read `workers/hooks/settings.json`. If any command paths contain `/path/to/` or don't match the current repo root, update them to use the actual absolute path of this management repo (detect via `pwd` or `git rev-parse --show-toplevel`). Same for `coordinator/hooks/settings.json`.
-3. **Self-check: verify hook scripts are executable.** Run `chmod +x scripts/hooks/*.sh` if needed.
-4. **Self-check: verify runtime files exist.** If `CEO_INBOX.md`, `coordinator/REGISTRY.md`, or `coordinator/DAILY_LOG.md` don't exist, create them with empty templates.
-5. Read `coordinator/REGISTRY.md` to rebuild state awareness
-6. Read `CEO_INBOX.md` to check for any pending CEO responses
-7. Start the round-robin loop:
+2. Read `CEO_CONFIG.md` (repo root) to load CEO preferences. **CEO_CONFIG.md overrides defaults in this file.** If a preference is set in CEO_CONFIG.md, follow it. If not set, fall back to this file's defaults.
+3. **Self-check: resolve paths.** Read `workers/hooks/settings.json`. If any command paths contain `/path/to/` or don't match the current repo root, update them to use the actual absolute path of this management repo (detect via `pwd` or `git rev-parse --show-toplevel`). Same for `coordinator/hooks/settings.json`.
+4. **Self-check: verify hook scripts are executable.** Run `chmod +x scripts/hooks/*.sh` if needed.
+5. **Self-check: verify runtime files exist.** If `CEO_INBOX.md`, `coordinator/REGISTRY.md`, or `coordinator/DAILY_LOG.md` don't exist, create them with empty templates.
+6. Read `coordinator/REGISTRY.md` to rebuild state awareness
+7. Read `CEO_INBOX.md` to check for any pending CEO responses
+8. Start the round-robin loop:
 
 ```
 /loop 5m coordinator-check-cycle
