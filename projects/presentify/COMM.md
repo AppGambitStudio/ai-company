@@ -1,7 +1,7 @@
 # COMM — presentify
 
 ## Status
-DISCOVERY
+PAUSED
 
 ## Timestamps
 - Created: 2026-04-02T20:00:00Z

@@ -17,7 +17,7 @@ Last checked: mrv-prototype at 2026-04-02T19:45:00Z
 
 ## Project Priority (ordered)
 1. mrv-prototype — HIGH (World Bank client project) — ACTIVE
-2. presentify — MEDIUM (existing project, awaiting priorities) — DISCOVERY
+2. presentify — MEDIUM (existing project) — PAUSED (awaiting CEO priorities)
 
 ## Queue (unassigned)
 (empty)
