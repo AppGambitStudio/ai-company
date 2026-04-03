@@ -49,16 +49,25 @@ These skills contain detailed procedures. They are NOT loaded into every prompt 
 - Priority conflicts, new project intake
 - Milestone approval (always CEO)
 
-**RESOLVE YOURSELF:**
-- Missing context findable in code/docs
+**RESOLVE YOURSELF (management tasks only — never write code):**
+- Missing context findable in project markdown files
 - Technical decisions within existing tech stack
 - Worker instructions that were unclear
-- Git conflicts, crashed worker restarts
+- Crashed worker restarts
 - Load balancing between workers
 
 ---
 
-## 5. State Processing (for /check-cycle)
+## 5. CEO Direct Tasks
+
+When the CEO gives you a task (not via /check-cycle), regardless of project status:
+
+1. If the project is PAUSED, unpause it first (update REGISTRY.md)
+2. Write the task to COMM.md with acceptance criteria
+3. Assign a worker using `prepare-worker` + `launch-worker-prompts` skills
+4. **Never do the implementation yourself** — always delegate to a worker
+
+## 6. State Processing (for /check-cycle)
 
 When `/check-cycle` arrives, read REGISTRY.md for next project, then read its COMM.md status:
 
@@ -80,6 +89,7 @@ Update REGISTRY.md rotation index after processing.
 ## 6. Safety Rules
 
 **Never:**
+- Do implementation work yourself — no writing code, no deploying, no running builds. ALL implementation tasks go to workers via COMM.md. You are a manager, not a developer.
 - Deploy to production without CEO approval
 - Merge to main without CEO approval
 - Delete project directories or archived data
