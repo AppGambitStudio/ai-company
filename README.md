@@ -138,6 +138,150 @@ Use these in the Coordinator session for quick operations:
 | `/check-loop` | Verify loop is running, restart if dead |
 | `/check-usage` | Check rate limit history and capacity |
 | `/sync-registry` | Reconcile REGISTRY.md against actual project state |
+
+### 8. Example Conversations
+
+Here's what a typical day looks like in the Coordinator session:
+
+**Starting up and checking status:**
+```
+> /status
+
+Coordinator online.
+- mrv-prototype: ACTIVE, Milestone 2 in progress, Task 7 assigned to Employee 1
+- presentify: PAUSED, awaiting CEO priorities
+- Employee 1: working on mrv-prototype (Task 7)
+- Employee 2: AVAILABLE
+Waiting for CEO instructions.
+
+> /milestones mrv-prototype
+
+Milestone 2: Core MRV Pipeline (5 tasks)
+  Task 6: API endpoints         — APPROVED
+  Task 7: Phase 1 Gap Closure   — IN_PROGRESS
+  Task 8: Data validation       — NOT_STARTED
+  Task 9: Report generation     — NOT_STARTED
+  Task 10: Integration tests    — NOT_STARTED
+```
+
+**Onboarding a new project:**
+```
+> /new-project client-portal A client-facing portal for viewing project status and invoices.
+  Tech stack: Next.js, PostgreSQL, SST on AWS.
+
+Starting discovery for client-portal...
+I have a few questions before we proceed:
+1. Authentication — SSO, magic link, or password-based?
+2. Invoice data — coming from an existing system or built from scratch?
+3. Target users — how many concurrent users expected?
+
+> SSO with Google, invoices from QuickBooks API, ~50 users
+
+Got it. Creating project files...
+- projects/client-portal/PROJECT.md ✓
+- projects/client-portal/MILESTONES.md ✓ (3 milestones planned)
+- projects/client-portal/COMM.md ✓
+
+Milestone 1: Auth + Dashboard Shell (4 tasks)
+Ready to assign Task 1 to a worker. Proceed?
+
+> yes
+
+Launching Employee 2 on client-portal, Task 1: Google SSO integration...
+```
+
+**Onboarding from an existing SOW or spec:**
+```
+> /new-project analytics-dashboard Real-time analytics dashboard for a client.
+  I've dropped the SOW and wireframes in projects/analytics-dashboard/docs/
+
+Reading docs/...
+- SOW.pdf: 12 requirements across 3 phases
+- wireframes.pdf: 8 screens
+- api-spec.yaml: 15 endpoints
+
+Phase 1 maps to Milestone 1 (5 tasks), Phase 2 to Milestone 2 (4 tasks), Phase 3 to Milestone 3 (3 tasks).
+
+A few gaps I noticed in the SOW:
+1. No mention of auth — should this sit behind the client's existing SSO?
+2. "Real-time" — WebSocket push or polling interval?
+
+> Behind their SSO, and WebSocket for real-time updates
+
+Updated PROJECT.md. Ready to start Milestone 1?
+```
+
+**Onboarding a pre-existing project:**
+```
+> /onboard-existing mobile-app /Users/dhaval/projects/mobile-app
+
+Scanning existing codebase...
+- React Native + Expo, TypeScript
+- 47 components, 12 screens, REST API layer
+- 68% test coverage, last commit 2 weeks ago
+- No CLAUDE.md found — I'll create one
+
+Project files created. Based on the code and git history, here's what I see:
+- Auth and core navigation are complete
+- Payment integration is half-done (Stripe SDK imported but not wired up)
+- No push notifications yet
+
+Want me to plan milestones from here, or do you have specific priorities?
+
+> Focus on finishing payments first, then push notifications
+
+Milestone 1: Complete Payment Integration (4 tasks)
+Milestone 2: Push Notifications (3 tasks)
+Ready to assign Task 1?
+```
+
+**Reviewing completed work:**
+```
+> /inbox
+
+### Task Complete: mrv-prototype / Task 7
+- All acceptance criteria met, tests passing
+- Branch: feature/task-7-phase1-gaps
+- Action needed: Review the code review results below, or I can proceed to Task 8.
+
+> proceed to Task 8
+
+Assigning Task 8 (Data validation) to Employee 1...
+Task written to COMM.md, worker launched.
+```
+
+**Handling escalations:**
+```
+> /inbox
+
+### Escalation: client-portal / Task 2
+- Worker failed 3 times on QuickBooks API integration
+- Error: OAuth token refresh not working with sandbox credentials
+- Action needed: Verify QuickBooks sandbox API keys are correct
+
+> The sandbox keys expired. Here are the new ones: [keys].
+  Update the .env in the client-portal repo and retry.
+
+Updating .env and relaunching worker on Task 2...
+```
+
+**End of day:**
+```
+> /daily-log
+
+Daily Summary — 2026-04-03
+- mrv-prototype: Tasks 7-8 completed, Task 9 in progress
+- client-portal: Task 1 approved, Task 2 in progress (was blocked, now resolved)
+- Revisions: 1 (mrv-prototype Task 8, missing edge case test)
+- Escalations: 1 (client-portal QuickBooks keys)
+- Tomorrow: Task 9 + Task 2 should complete, queue Task 10 and Task 3
+
+> Looks good. Pause client-portal for the weekend, keep mrv-prototype running.
+
+/pause-project client-portal
+Paused. Employee 2 freed. mrv-prototype continues with Employee 1.
+```
+
 ---
 
 ## Architecture
