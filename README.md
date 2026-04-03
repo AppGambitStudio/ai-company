@@ -293,6 +293,22 @@ The Coordinator reads CEO_CONFIG.md on every startup and adjusts its behavior. N
 
 ---
 
+## Current Caveats
+
+- **Single machine only** — Coordinator and all workers run on the same machine, sharing CPU and Claude API rate limits. True parallelism is limited.
+- **Shared account** — Currently testing with 1 Claude account for both Coordinator and workers. Workers and Coordinator share the same rate limit.
+- **No dashboard** — Monitoring requires `tmux attach` or slash commands. No web UI or push notifications yet.
+- **No cross-project dependencies** — Projects are fully independent. No way to express "Project B depends on Project A's API."
+
+## Future Plans
+
+- **Multi-machine workers** — Launch workers on separate machines via SSH, each with its own Claude account and rate limits
+- **Dedicated worker accounts** — Separate Claude accounts ($100/mo each) for true parallel execution
+- **Status dashboard** — Web UI or Slack/Telegram notifications for real-time visibility without terminal access
+- **Cross-project dependencies** — Coordinator tracks inter-project blockers and sequences work accordingly
+
+---
+
 ## Documentation
 
 | Document | Purpose |
