@@ -53,6 +53,15 @@ echo "Starting Coordinator session..."
 tmux new-session -d -s coordinator -c "$REPO_DIR" \
   "claude --permission-mode bypassPermissions"
 
+# Wait for Claude to initialize
+echo "Waiting for Coordinator to initialize..."
+sleep 5
+
+# Send the startup prompt automatically
+STARTUP_PROMPT="You are APPGAMBIT AI Coordinator. Read coordinator/CLAUDE.md for your operating manual. Read CEO_CONFIG.md for CEO preferences. Read coordinator/REGISTRY.md to check current state. Begin your startup sequence."
+tmux send-keys -t coordinator "$STARTUP_PROMPT" Enter
+echo "Startup prompt sent."
+
 sleep 2
 
 # Start the loop in a separate tmux session
@@ -68,10 +77,4 @@ echo ""
 echo "  Coordinator:  tmux attach -t coordinator"
 echo "  Loop monitor: tmux attach -t coordinator-loop"
 echo "  Stop all:     ./scripts/stop.sh"
-echo ""
-echo "  First time? Paste this in the Coordinator session:"
-echo "  You are APPGAMBIT AI Coordinator. Read coordinator/CLAUDE.md"
-echo "  for your operating manual. Read CEO_CONFIG.md for CEO"
-echo "  preferences. Read coordinator/REGISTRY.md to check current"
-echo "  state. Begin your startup sequence."
 echo ""
