@@ -1,10 +1,24 @@
-# APPGAMBIT AI Company
+# AI Company
 
 An AI-native software agency powered by Claude Code CLI. A human CEO provides direction, an AI Coordinator manages everything, and AI Workers execute development tasks autonomously.
 
 **Cost:** $100-300/month depending on number of accounts.
 
 **Capacity:** Up to 6 concurrent projects with 2 AI workers.
+
+---
+
+## Why This Exists
+
+Even with a lot of AI tools and automation, I am facing constant context switching due to multiple projects, across clients and varying requirements and schedule. The bottleneck was never the code — it was the management overhead. Keeping track of what's in progress, what's blocked, what needs review, what the client said last Tuesday. Every time you switched projects, you would lose 20-30 minutes (or more) just rebuilding context.
+
+I wanted a middle layer — something that could hold all the project context, coordinate work, and let me stay at the high-level instead of drowning in individual task management. Not a project management tool with dashboards and notifications, but something that could actually *do the work* and only surface what needs my attention.
+
+The Claude Code ecosystem made this viable. Claude Code CLI runs autonomously in the terminal, reads project context from `CLAUDE.md` files, executes multi-step tasks with subagents, and maintains state across sessions. The skills system, permission hooks, and `tmux` integration mean you can wire up a persistent AI team that operates on markdown files — no database, no custom framework, no infrastructure to maintain.
+
+Yes, the Coordinator layer burns more tokens than just pointing Claude at a project and saying "build this." But it creates something valuable in return: a complete paper trail. Every task assignment, every code review, every escalation, every decision is captured in structured markdown files. When you come back to a project after a week, the context is *there* — in COMM.md, MILESTONES.md, REVIEW_LOG.md. The AI reads it and picks up exactly where it left off.
+
+In the age of agentic AI, markdown files can become an effective company operating model. No web app, no workflow engine — just structured documents in a git repo that teach AI agents how to operate. This project takes that idea and applies it to running a software development team.
 
 ---
 
