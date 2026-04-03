@@ -292,17 +292,17 @@ Paused. Employee 2 freed. mrv-prototype continues with Employee 1.
 |                                                                                   |
 |  +------------------+    CEO_CONFIG.md     +----------------------------------+   |
 |  |    HUMAN CEO     |    CEO_INBOX.md      |        AI COORDINATOR            |   |
-|  |                  |<-------------------->|     (Claude Code CLI session)     |   |
-|  |  - Direction     |    Channel           |                                  |   |
-|  |  - Approvals     |   (Telegram/         |  - Runs in tmux (persistent)     |   |
-|  |  - Escalations   |    Discord/Slack)    |  - External check-cycle loop     |   |
+|  |                  |<-------------------->|     (Claude Code CLI session)    |   |
+|  |  - Direction     |                      |                                  |   |
+|  |  - Approvals     |                      |  - Runs in tmux (persistent)     |   |
+|  |  - Escalations   |                      |  - External check-cycle loop     |   |
 |  +------------------+                      |  - Reads coordinator/CLAUDE.md   |   |
 |                                            |  - Reads CEO_CONFIG.md           |   |
-|                                            +--+----------+-------------------+   |
-|                                               |          |                       |
+|                                            +--+----------+-------------------+    |
+|                                               |          |                        |
 |                              launches via     |          |  launches via          |
 |                              claude -p        |          |  claude -p             |
-|                                               |          |                       |
+|                                               |          |                        |
 |                   +---------------------------+          +-------------------+    |
 |                   |                                                          |    |
 |                   v                                                          v    |
@@ -346,7 +346,7 @@ CEO -----> Coordinator -----> Worker
                                     |
 CEO <----- Coordinator <----- Worker
      CEO_INBOX   REVIEW_LOG    COMM.md
-     Channel     (verdict)     (DONE_AWAITING_REVIEW)
+     (md file)   (verdict)     (DONE_AWAITING_REVIEW)
 ```
 
 ### State Machine (per task)
@@ -387,25 +387,24 @@ Can be paused (`touch /tmp/coordinator-loop-pause`) and resumed (`rm /tmp/coordi
 ```
 ai-company/
 ├── README.md                 ← You are here
+├── LICENSE
 ├── SPEC.md                   ← System spec index
-├── CEO_CONFIG.md             ← Your management preferences (customize this)
-├── CEO_INBOX.md              ← Coordinator → CEO communication
+├── CEO_CONFIG.md             ← Your management preferences (gitignored, from template)
+├── CEO_CONFIG.template.md    ← Template for CEO preferences
+├── CEO_INBOX.md              ← Coordinator → CEO communication (gitignored)
+├── CEO_INBOX.template.md     ← Template for CEO inbox
 │
-├── spec/                     ← System specification (the engine)
-│   ├── 01-roles.md
-│   ├── 02-infrastructure.md
-│   ├── 03-repo-structure.md
-│   ├── 04-file-protocols.md
-│   ├── 05-state-machine.md
-│   ├── 06-workflows.md
-│   ├── 07-rules.md
-│   ├── 08-bootstrap.md
-│   └── 09-cost-and-future.md
+├── .claude/
+│   ├── commands/             ← Slash commands (18 commands: /status, /inbox, etc.)
+│   ├── skills/               ← Coordinator skills (review-code, launch-worker-prompts, etc.)
+│   └── settings.local.json   ← Claude Code settings and hooks
 │
 ├── coordinator/              ← Coordinator operating files
 │   ├── CLAUDE.md             ← Coordinator's operating manual
-│   ├── REGISTRY.md           ← Worker/project status registry
-│   ├── DAILY_LOG.md          ← Daily summaries
+│   ├── REGISTRY.md           ← Worker/project status registry (gitignored)
+│   ├── REGISTRY.template.md
+│   ├── DAILY_LOG.md          ← Daily summaries (gitignored)
+│   ├── DAILY_LOG.template.md
 │   └── hooks/settings.json
 │
 ├── workers/                  ← Worker operating files
@@ -422,18 +421,30 @@ ai-company/
 │       ├── block-interactive-commands.sh
 │       └── validate-comm-update.sh
 │
-├── projects/                 ← One subdirectory per project
+├── projects/                 ← One subdirectory per project (gitignored)
 │   └── {project-name}/
-│       ├── PROJECT.md
-│       ├── BRIEF.md
-│       ├── COMM.md
-│       ├── MILESTONES.md
+│       ├── PROJECT.md        ← Full project spec
+│       ├── BRIEF.md          ← Initial project brief
+│       ├── COMM.md           ← Current task communication
+│       ├── MILESTONES.md     ← Active milestones and tasks
 │       ├── MILESTONES_ARCHIVE.md
-│       └── REVIEW_LOG.md
+│       ├── REVIEW_LOG.md     ← Code review history
+│       ├── MEMORY.md         ← Project-specific context for workers
+│       └── docs/             ← SOWs, wireframes, specs from CEO
+│
+├── spec/                     ← System specification
+│   ├── 01-roles.md
+│   ├── 02-infrastructure.md
+│   ├── 03-repo-structure.md
+│   ├── 04-file-protocols.md
+│   ├── 05-state-machine.md
+│   ├── 06-workflows.md
+│   ├── 07-rules.md
+│   ├── 08-bootstrap.md
+│   └── 09-cost-and-future.md
 │
 └── docs/
-    ├── SETUP.md              ← Detailed setup guide
-    └── superpowers/          ← Design docs and plans
+    └── SETUP.md              ← Detailed setup guide
 ```
 
 ---
@@ -447,7 +458,7 @@ Edit `CEO_CONFIG.md` to customize:
 - **Working rules:** cooldown, loop interval, branch strategy, commit style
 - **Dos and Don'ts:** your specific rules for how the team operates
 
-The Coordinator reads CEO_CONFIG.md on every startup and adjusts its behavior. No code changes needed.
+The Coordinator reads CEO_CONFIG.md when it needs to check preferences. No code changes needed.
 
 ---
 
@@ -471,14 +482,14 @@ The Coordinator reads CEO_CONFIG.md on every startup and adjusts its behavior. N
 
 | Document | Purpose |
 |----------|---------|
-| `SPEC.md` | System specification index (links to `spec/` files) |
-| `CEO_CONFIG.md` | Your management preferences |
-| `coordinator/CLAUDE.md` | Coordinator's full operating manual |
+| `CEO_CONFIG.md` | Your management preferences (copy from template) |
+| `coordinator/CLAUDE.md` | Coordinator's operating manual |
 | `workers/employee-*/CLAUDE.md` | Worker operating manuals |
+| `.claude/commands/` | All slash commands available in the Coordinator session |
+| `.claude/skills/` | Coordinator skills (code review, worker launch, etc.) |
 | `docs/SETUP.md` | Detailed first-time setup guide |
-| `spec/06-workflows.md` | All workflows (onboarding, task cycle, escalation, etc.) |
-| `spec/07-rules.md` | All rules and edge cases |
+| `SPEC.md` → `spec/` | Full system specification (architecture, workflows, rules) |
 
 ---
 
-*Version: 1.3 | Last updated: 2026-04-03*
+*Version: 1.4 | Last updated: 2026-04-03*
