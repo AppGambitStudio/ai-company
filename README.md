@@ -41,21 +41,16 @@ chmod +x scripts/hooks/*.sh
 ### 3. Start the Coordinator
 
 ```bash
-# Open a persistent terminal session
-tmux new-session -s coordinator
-
-# Navigate to the management repo
-cd ai-company
-
-# Launch Claude Code
-claude --permission-mode bypassPermissions
+./scripts/start.sh          # default: 15m check-cycle interval
+./scripts/start.sh 5        # or set custom interval in minutes
 ```
 
-Paste this as your first message to the Coordinator:
+This automatically:
+- Launches the Coordinator in a tmux session
+- Sends the startup prompt (reads state, reports summary, waits for CEO)
+- Starts the external check-cycle loop
 
-```
-You are APPGAMBIT AI Coordinator. Read coordinator/CLAUDE.md for your operating manual. Read CEO_CONFIG.md for CEO preferences. Read coordinator/REGISTRY.md to check current state. Begin your startup sequence.
-```
+To stop everything: `./scripts/stop.sh`
 
 ### 4. Onboard a Project
 
@@ -91,7 +86,7 @@ tmux attach -t coordinator
 
 - **Detach Coordinator:** `Ctrl+B` then `D` (tmux detach)
 - **Reattach:** `tmux attach -t coordinator`
-- **If Coordinator crashes:** Restart with Step 3. It reads REGISTRY.md to rebuild state.
+- **If Coordinator crashes:** Run `./scripts/start.sh` again. It reads REGISTRY.md to rebuild state.
 
 ### 7. Slash Commands
 
@@ -142,7 +137,7 @@ Use these in the Coordinator session for quick operations:
 |  |                  |<-------------------->|     (Claude Code CLI session)     |   |
 |  |  - Direction     |    Channel           |                                  |   |
 |  |  - Approvals     |   (Telegram/         |  - Runs in tmux (persistent)     |   |
-|  |  - Escalations   |    Discord/Slack)    |  - /loop 15m (round-robin)       |   |
+|  |  - Escalations   |    Discord/Slack)    |  - External check-cycle loop     |   |
 |  +------------------+                      |  - Reads coordinator/CLAUDE.md   |   |
 |                                            |  - Reads CEO_CONFIG.md           |   |
 |                                            +--+----------+-------------------+   |
@@ -206,16 +201,26 @@ WAITING_FOR_WORKER --> IN_PROGRESS --> DONE_AWAITING_REVIEW --> APPROVED --> nex
                            +--> BLOCKED --> ESCALATED_TO_CEO
 ```
 
-### Round-Robin Loop (Coordinator)
+### Round-Robin Loop (External)
+
+The check-cycle loop runs as a separate process (`scripts/coordinator-loop.sh`), not inside the Coordinator session:
 
 ```
-Every 15 minutes:
-  git pull --> REGISTRY.md --> pick project N --> read COMM.md --> process --> git push
-                                    |
-                               rotate to N+1
+Every N minutes (default 15):
+  Is Coordinator idle? --> Send /check-cycle --> REGISTRY.md --> pick project --> read COMM.md --> process
+                                                                     |
+                                                                rotate to next
 ```
 
-**Protocol:** Git commits on a private management repo. Every state change is a commit. No database, no queue, no custom framework.
+Can be paused (`touch /tmp/coordinator-loop-pause`) and resumed (`rm /tmp/coordinator-loop-pause`).
+
+### Merge Strategy
+
+- Workers develop on feature branches (`feature/task-{N}-{description}`)
+- Feature branches are merged to main on **CEO approval** (typically at milestone completion)
+- Coordinator never merges to main without CEO say-so
+
+**Protocol:** Markdown files on a management repo. Every state change is a file update. No database, no queue, no custom framework.
 
 ---
 
@@ -250,10 +255,14 @@ ai-company/
 │   ├── employee-2/CLAUDE.md
 │   └── hooks/settings.json
 │
-├── scripts/hooks/            ← Guardrail scripts
-│   ├── block-dangerous-commands.sh
-│   ├── block-interactive-commands.sh
-│   └── validate-comm-update.sh
+├── scripts/
+│   ├── start.sh              ← Start Coordinator + check-cycle loop
+│   ├── stop.sh               ← Stop all sessions
+│   ├── coordinator-loop.sh   ← External check-cycle loop
+│   └── hooks/                ← Guardrail scripts
+│       ├── block-dangerous-commands.sh
+│       ├── block-interactive-commands.sh
+│       └── validate-comm-update.sh
 │
 ├── projects/                 ← One subdirectory per project
 │   └── {project-name}/
@@ -298,4 +307,4 @@ The Coordinator reads CEO_CONFIG.md on every startup and adjusts its behavior. N
 
 ---
 
-*Version: 1.2 | Last updated: 2026-04-02*
+*Version: 1.3 | Last updated: 2026-04-03*
