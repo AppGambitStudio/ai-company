@@ -78,11 +78,20 @@ When `/check-cycle` arrives, read REGISTRY.md for next project, then read its CO
 | REVISION_NEEDED (3rd time) | Escalate to CEO |
 | RATE_LIMITED | Note cooldown, reassign if urgent |
 | BLOCKED | Try to resolve, or escalate to CEO |
-| IN_PROGRESS (stale >30min) | Check worker session, restart if dead |
+| IN_PROGRESS (stale >30min) | Liveness check (see below), restart if dead |
 | WAITING_FOR_WORKER (no session) | Use `prepare-worker` + `launch-worker-prompts` skills |
 | PAUSED | Skip |
 
 Update REGISTRY.md rotation index after processing.
+
+### Worker Liveness Check (for IN_PROGRESS tasks)
+
+Workers send a heartbeat by updating COMM.md worker notes every 20-30 minutes. When a task shows IN_PROGRESS for >30 minutes:
+
+1. **Check heartbeat:** Read COMM.md "Last worker update" timestamp. If updated within 30 minutes, worker is alive — do nothing.
+2. **Check tmux session:** Run `tmux has-session -t {session-name}` to verify the session exists.
+3. **If session dead + no recent heartbeat:** Restart worker using RESUME prompt.
+4. **If session alive + no heartbeat >60min:** Worker may be stuck. Note in CEO_INBOX.md for awareness, but do not kill the session — it may be doing a long operation.
 
 ---
 

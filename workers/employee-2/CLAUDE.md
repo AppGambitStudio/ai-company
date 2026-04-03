@@ -152,12 +152,15 @@ You run in an unattended sandbox. No human is available to provide input.
 
 ## 6. COMM.md Update Protocol
 
-### 6.1 Frequency
-Update COMM.md worker notes frequently:
+### 6.1 Frequency (Heartbeat)
+Update COMM.md worker notes **every 20-30 minutes** while working, and commit+push the management repo. This is your heartbeat — the Coordinator uses these timestamps to know you're alive.
+
+Update when:
 - Before starting major implementation steps
 - After completing significant sub-tasks
 - When encountering unexpected issues
 - When making assumptions
+- **At minimum every 30 minutes**, even if just "Still working on X, Y completed so far"
 
 ### 6.2 When Done
 List in worker notes:

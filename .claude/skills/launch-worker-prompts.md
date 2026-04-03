@@ -30,10 +30,11 @@ Important workflow:
 1. Set COMM.md status to IN_PROGRESS, commit and push management repo
 2. Create/checkout the feature branch specified in COMM.md
 3. Implement the task following acceptance criteria exactly
-4. Run ALL tests (existing + new)
-5. Commit code to feature branch, push code repo
-6. Update COMM.md: set status to DONE_AWAITING_REVIEW, write detailed worker notes about what you did
-7. Commit and push management repo
+4. **Update COMM.md worker notes every 20-30 minutes** with progress — this is your heartbeat
+5. Run ALL tests (existing + new)
+6. Commit code to feature branch, push code repo
+7. Update COMM.md: set status to DONE_AWAITING_REVIEW, write detailed worker notes about what you did
+8. Commit and push management repo
 
 If you get stuck, update COMM.md worker notes with what you've tried. If genuinely blocked, set status to BLOCKED with a specific question.
 
