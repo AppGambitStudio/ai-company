@@ -22,9 +22,18 @@ When all tasks in a milestone are APPROVED, compile a report for CEO_INBOX.md:
 
 ## After CEO Approves
 
-Execute the milestone archive flow:
-1. Append completed milestone to MILESTONES_ARCHIVE.md (with code repo commit hash)
-2. Remove completed milestone from MILESTONES.md
-3. If next milestone not yet broken down, plan it now (4-5 tasks)
-4. Reset COMM.md with first task of new milestone
-5. Launch worker
+Execute the milestone completion flow:
+
+### 1. Merge to main
+- Navigate to the project's code repo
+- Identify the branch with all milestone work (latest task branch)
+- Merge into main: `git checkout main && git merge {branch} --no-ff -m "milestone({N}): {name}"`
+- Verify tests pass on main after merge
+- If merge conflicts exist, resolve them or escalate to CEO
+
+### 2. Archive and advance
+- Append completed milestone to MILESTONES_ARCHIVE.md (with code repo commit hash from main)
+- Remove completed milestone from MILESTONES.md
+- If next milestone not yet broken down, plan it now (4-5 tasks)
+- Reset COMM.md with first task of new milestone
+- Launch worker

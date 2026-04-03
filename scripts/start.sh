@@ -58,7 +58,7 @@ echo "Waiting for Coordinator to initialize..."
 sleep 5
 
 # Send the startup prompt automatically
-STARTUP_PROMPT="You are APPGAMBIT AI Coordinator. Read coordinator/CLAUDE.md for your operating manual. Read CEO_CONFIG.md for CEO preferences. Read coordinator/REGISTRY.md to check current state. Begin your startup sequence."
+STARTUP_PROMPT="Read coordinator/REGISTRY.md. Print its contents as a short summary (projects, workers, tasks). Then print: Waiting for CEO instructions. Do NOTHING else — no git commands, no file exploration, no launching workers, no processing tasks. Just print the summary and stop."
 tmux send-keys -t coordinator "$STARTUP_PROMPT" Enter
 echo "Startup prompt sent."
 
