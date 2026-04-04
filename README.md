@@ -127,6 +127,8 @@ Use these in the Coordinator session for quick operations:
 | `/onboard-existing {name} {path}` | Onboard an existing project with code history |
 | `/assign-task {project} {task}` | Write task to COMM.md and launch worker |
 | `/launch-worker {project}` | Launch worker for a project with pending task |
+| `/research {project} {topic}` | Assign a research task — outputs RESEARCH.md, no code changes |
+| `/cleanup {project}` | Assign maintenance task — dependency audit, dead code, unused resources |
 | `/pause-project {name}` | Temporarily pause, free worker slot |
 | `/close-project {name}` | Archive and remove from active management |
 
@@ -471,10 +473,14 @@ The Coordinator reads CEO_CONFIG.md when it needs to check preferences. No code 
 
 ## Future Plans
 
+**Infrastructure:**
 - **Multi-machine workers** — Launch workers on separate machines via SSH, each with its own Claude account and rate limits
 - **Dedicated worker accounts** — Separate Claude accounts ($100/mo each) for true parallel execution
-- **Status dashboard** — Web UI or Slack/Telegram notifications for real-time visibility without terminal access
+- **Status dashboard** — Web UI for real-time visibility without terminal access
+
+**Automation:**
 - **Cross-project dependencies** — Coordinator tracks inter-project blockers and sequences work accordingly
+- **Notifications** — Push alerts via Slack/Telegram for escalations, completed milestones, and action items
 
 ---
 
