@@ -478,6 +478,34 @@ The Coordinator reads CEO_CONFIG.md when it needs to check preferences. No code 
 
 ---
 
+## FAQ
+
+**How does this help if I can already use Claude Code directly on my projects?**
+
+You can — and for a single project, that works fine. The problem starts when you're managing 3-6 projects simultaneously. Each time you switch projects, you lose context. What was the last task? What's the current branch? What did the code review say? With AI Company, the Coordinator holds all of that context in structured markdown files. You give high-level direction ("finish the payment integration, then start on notifications") and the system handles task breakdown, worker assignment, code review, and progress tracking. You stay at the strategic level instead of manually managing each session.
+
+**Why use Claude Pro/Max login sessions instead of the API?**
+
+Three reasons:
+
+1. **Cost predictability.** A Claude Pro account is $20/month (Max is $100 or $200) with generous usage. API costs for the same workload — multiple long-running coding sessions with large context windows — would be significantly higher and unpredictable. For an always-on dev team running multiple projects, flat-rate billing is far more practical.
+
+2. **Claude Code CLI features.** The CLI provides tools that the raw API doesn't — persistent sessions, `tmux` integration, `CLAUDE.md` auto-loading, slash commands, skills, permission hooks, and subagent orchestration. These are the building blocks that make the Coordinator and Worker system possible without custom infrastructure.
+
+**Can I use this with other AI models or tools?**
+
+The architecture (markdown files, git-based state, coordinator/worker pattern) is model-agnostic. But the implementation relies heavily on Claude Code CLI features — `CLAUDE.md` auto-loading, skills, permission modes, `tmux send-keys` for session management. Adapting it to another tool would require replacing the CLI integration layer.
+
+**How many projects can this handle?**
+
+It depends on the volume of work. With a single Claude account (shared Coordinator + Worker), couple of projects with one active at a time.
+
+**What happens if the Coordinator or a Worker crashes?**
+
+The system is crash-resilient by design. All state lives in markdown files on disk, not in memory. Run `./scripts/start.sh` to restart the Coordinator — it reads `REGISTRY.md` and picks up where it left off. Workers can be relaunched with a RESUME prompt that checks git history and COMM.md to continue from the last checkpoint.
+
+---
+
 ## Documentation
 
 | Document | Purpose |
@@ -492,4 +520,4 @@ The Coordinator reads CEO_CONFIG.md when it needs to check preferences. No code 
 
 ---
 
-*Version: 1.4 | Last updated: 2026-04-03*
+*Version: 1.5 | Last updated: 2026-04-04*
